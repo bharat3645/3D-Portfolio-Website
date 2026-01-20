@@ -21,7 +21,7 @@ export function ScrambleText({
     delay = 0
 }: ScrambleTextProps) {
     const [displayText, setDisplayText] = useState('');
-    const [isComplete, setIsComplete] = useState(false);
+    const isCompleteRef = useRef(false);
 
     // We keep track of how many characters are "locked in"
     const revealIndexRef = useRef(0);
@@ -42,7 +42,7 @@ export function ScrambleText({
         const startScramble = () => {
             // Start the scrambling loop for non-revealed chars
             scrambleIntervalRef.current = setInterval(() => {
-                if (isComplete) return;
+                if (isCompleteRef.current) return;
 
                 setDisplayText(prev => {
                     const next = prev.split('');
@@ -62,7 +62,7 @@ export function ScrambleText({
             // Start revealing characters one by one
             const nextStep = () => {
                 if (revealIndexRef.current >= text.length) {
-                    setIsComplete(true);
+                    isCompleteRef.current = true;
                     if (scrambleIntervalRef.current) clearInterval(scrambleIntervalRef.current);
                     return;
                 }

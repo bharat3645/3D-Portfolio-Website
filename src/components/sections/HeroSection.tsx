@@ -12,7 +12,7 @@ export function HeroSection() {
 
             {/* ================= BACKGROUND: Deep Void ================= */}
             <div className="absolute inset-0 z-0 bg-[#050505]">
-                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+                <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70 pointer-events-none" />
             </div>
 

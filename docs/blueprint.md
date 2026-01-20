@@ -1,17 +1,29 @@
-# **App Name**: Portfolio Pro 3D
+# **App Name**: 404ghost
 
-## Core Features:
+## Core Identity
+A premium, cinematic portfolio for a Senior UI Designer/Engineer. The aesthetic is defined by "System," "Taste," and "Restraint."
 
-- Interactive 3D Showcase: Interactive 3D model that serves as a visual centerpiece, showcasing your skills and projects in an engaging way.
-- Dynamic Project Display: Dynamic project display with interactive elements. Users can explore project details, view demos, and access case studies.
-- AI Portfolio Tailor: AI-powered tool that helps tailor your portfolio content based on the job description of the position you are applying to.
+## Feature Highlights
+- **Interactive 3D Centerpiece:** A high-fidelity 3D model that responds to user interaction.
+- **AI Contextualization:** "AI Tailor" feature that rewrites the portfolio bio to match specific job descriptions.
+- **Cinematic Experience:** High-end motion design and transitions that feel like a movie interface found in sci-fi UI, but grounded in usability.
 
-## Style Guidelines:
+## Design System Guidelines
 
-- Primary color: Dark blue (#1A237E) for a professional and modern feel.
-- Secondary color: Light grey (#EEEEEE) for backgrounds and content separation.
-- Accent: Teal (#26A69A) for interactive elements and highlights.
-- Grid-based layout to ensure a clean and organized presentation of content.
-- Use of white space to improve readability and focus on key elements.
-- Advanced transitions and animations to provide a seamless user experience throughout the portfolio website.
-- Modern and minimalist icons for navigation and section headings.
+### Color Palette
+- **Primary Background:** Black (`#000000`)
+- **Primary Text:** White (`#FFFFFF`)
+- **Brand Accent:** Crimson (`#E61E32`) - Used sparingly for high-impact actions and active states.
+- **Secondary:** Neutral Greys (e.g., `#1e1e1e` for cards/surfaces)
+
+### Typography
+- **Display Font:** *Inter Tight*
+  - Variable weight, often bold/black for headlines.
+  - Tightscrunchy tracking (letter-spacing: -0.02em to -0.04em).
+- **Body Font:** *Inter*
+  - Clean, legible, standard tracking.
+
+### Principles
+- **Minimalism:** Use whitespace significantly. Avoid clutter.
+- **Precision:** Every pixel matters. Borders are thin (1px), corners are deliberate.
+- **Motion:** Animations should be "smooth" and "linear" or "ease-out", avoiding "bounce" or "spring" effects unless physically justified.

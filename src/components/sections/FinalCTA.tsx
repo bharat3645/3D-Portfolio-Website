@@ -23,7 +23,7 @@ export function FinalCTA() {
                     transition={{ duration: 1, ease: "easeOut" }}
                 >
                     <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight mb-6">
-                        Let's build something ambitious.
+                        Let&apos;s build something ambitious.
                     </h2>
                 </motion.div>
 

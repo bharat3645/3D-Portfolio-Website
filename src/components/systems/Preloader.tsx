@@ -7,18 +7,17 @@ import { useEffect, useState } from 'react';
  * Preloader - System Boot Sequence
  * Cinematic boot-up with terminal metaphors and progress
  */
+const steps = [
+    "INITIALIZING KERNEL...",
+    "LOADING MOTION ENGINE...",
+    "CALIBRATING SENSORS...",
+    "ESTABLISHING LINK...",
+    "SYSTEM READY"
+];
+
 export function Preloader({ onComplete }: { onComplete: () => void }) {
     const [progress, setProgress] = useState(0);
     const [bootStep, setBootStep] = useState(0);
-
-    // Boot sequence steps
-    const steps = [
-        "INITIALIZING KERNEL...",
-        "LOADING MOTION ENGINE...",
-        "CALIBRATING SENSORS...",
-        "ESTABLISHING LINK...",
-        "SYSTEM READY"
-    ];
 
     useEffect(() => {
         // Simulate loading time 2.5s
