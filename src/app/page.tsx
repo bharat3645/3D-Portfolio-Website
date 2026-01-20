@@ -1,67 +1,106 @@
-import { HeroSection } from '@/components/hero-section';
-import { ProjectsSection } from '@/components/projects-section';
-import { AboutSection } from '@/components/about-section';
-import { ContactSection } from '@/components/contact-section';
-import { AiTailorSection } from '@/components/ai-tailor-section';
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
-import { ExperienceSection } from '@/components/experience-section';
-import { AnimatedSection } from '@/components/AnimatedSection'; // Import AnimatedSection
+'use client';
+
+import { useState, useEffect, lazy, Suspense, memo } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { AmbientSystem } from '@/components/systems/AmbientSystem';
+import { HeroSection } from '@/components/sections/HeroSection';
+import { Preloader } from '@/components/systems/Preloader';
+import { ParticleField } from '@/components/graphics/ParticleField';
+import { Vignette } from '@/components/graphics/Vignette';
+
+// Lazy load below-fold sections for better initial load performance
+const CurrentRoleSection = lazy(() => import('@/components/sections/CurrentRoleSection').then(m => ({ default: m.CurrentRoleSection })));
+const IdentitySection = lazy(() => import('@/components/sections/IdentitySection').then(m => ({ default: m.IdentitySection })));
+const SkillDomains = lazy(() => import('@/components/sections/SkillDomains').then(m => ({ default: m.SkillDomains })));
+const ExperienceSection = lazy(() => import('@/components/sections/ExperienceSection').then(m => ({ default: m.ExperienceSection })));
+const WorkSection = lazy(() => import('@/components/sections/WorkSection').then(m => ({ default: m.WorkSection })));
+const CredibilitySection = lazy(() => import('@/components/sections/CredibilitySection').then(m => ({ default: m.CredibilitySection })));
+const FinalCTA = lazy(() => import('@/components/sections/FinalCTA').then(m => ({ default: m.FinalCTA })));
+
+// Memoized section wrapper for performance
+const SectionWrapper = memo(({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<div className="h-screen" />}>
+    {children}
+  </Suspense>
+));
+SectionWrapper.displayName = 'SectionWrapper';
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Prevent scrolling during load
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = 'hidden';
+      window.scrollTo(0, 0); // Force top
+    } else {
+      document.body.style.overflow = '';
+      window.scrollTo(0, 0); // Reset position for entry
+    }
+  }, [isLoading]);
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-1 space-y-0">
-        <AnimatedSection direction="up" delay={0.1}>
-          <div className="section-gradient section-slide-bottom section-glow space-bg-1">
-            <HeroSection />
-          </div>
-        </AnimatedSection>
+    <main className="relative min-h-screen w-full overflow-x-hidden bg-bg-void selection:bg-accent-primary selection:text-bg-void">
 
-        <hr className="section-divider" />
+      {/* 1. Cinematic Boot Loader */}
+      <AnimatePresence mode='wait'>
+        {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+      </AnimatePresence>
 
-        <AnimatedSection direction="left" delay={0.2}>
-          <div className="section-gradient section-slide-left space-bg-2">
-            <ProjectsSection />
-          </div>
-        </AnimatedSection>
+      {/* 2. Persistent Systems (Always Mounted) */}
+      <AmbientSystem />
+      {!isLoading && (
+        <>
+          {/* ParticleField suspended for stricter cinematic look */}
+          <ParticleField />
+          <Vignette />
+        </>
+      )}
 
-        <hr className="section-divider" />
+      {/* 3. Main Content - Reveal after load */}
+      <motion.div
+        className="relative z-10 space-y-32 md:space-y-48"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+      >
+        {/* Hero loads immediately */}
+        <HeroSection />
 
-        <AnimatedSection direction="right" delay={0.3}>
-          <div className="section-gradient section-slide-right space-bg-3">
-            <AboutSection />
-          </div>
-        </AnimatedSection>
+        {/* Below-fold sections lazy loaded */}
+        {!isLoading && (
+          <>
+            <SectionWrapper>
+              <CurrentRoleSection />
+            </SectionWrapper>
 
-        <hr className="section-divider" />
+            <SectionWrapper>
+              <IdentitySection />
+            </SectionWrapper>
 
-        <AnimatedSection direction="up" delay={0.4}>
-          <div className="section-gradient section-slide-bottom section-glow space-bg-4">
-            <ExperienceSection />
-          </div>
-        </AnimatedSection>
+            <SectionWrapper>
+              <SkillDomains />
+            </SectionWrapper>
 
-        <hr className="section-divider" />
+            <SectionWrapper>
+              <ExperienceSection />
+            </SectionWrapper>
 
-        <AnimatedSection direction="flip" delay={0.5}>
-          <div className="section-gradient section-slide-top space-bg-5">
-            <AiTailorSection />
-          </div>
-        </AnimatedSection>
+            <SectionWrapper>
+              <WorkSection />
+            </SectionWrapper>
 
-        <hr className="section-divider" />
+            <SectionWrapper>
+              <CredibilitySection />
+            </SectionWrapper>
 
-        <AnimatedSection direction="down" delay={0.6}>
-          <div className="section-gradient section-slide-bottom section-glow space-bg-6">
-            <ContactSection />
-          </div>
-        </AnimatedSection>
-      </main>
-      <AnimatedSection direction="up" delay={0.7}>
-        <Footer />
-      </AnimatedSection>
-    </div>
+            <SectionWrapper>
+              <FinalCTA />
+            </SectionWrapper>
+          </>
+        )}
+      </motion.div>
+    </main>
   );
 }

@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google'; // Import Google Fonts
+import { Inter, Poppins } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
 import './globals.css';
-import RouteTransition from '@/components/transition'; // Renamed to 'transition' instead of 'RouteTransition'
-import TechBackgroundWrapper from '@/components/TechBackgroundWrapper';
+import { ClientProviders } from '@/components/providers/ClientProviders';
 
 // Configure fonts
 const inter = Inter({
@@ -21,10 +20,13 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Bharat | Full-Stack Developer & AI Enthusiast',
+    default: '404ghost | Bharat',
     template: '%s | Bharat',
   },
-  description: 'Portfolio of Bharat - Full-stack developer and AI enthusiast',
+  description: 'Digital Reality Constructor. Systems Architect.',
+  icons: {
+    icon: '/logo.jpg',
+  },
 };
 
 export default function RootLayout({
@@ -34,13 +36,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-      <body className="antialiased">
-        {/* Temporarily disabled to isolate error */}
-        {/* <TechBackgroundWrapper /> */}
-        <RouteTransition>
+      <body className="antialiased bg-bg-void text-text-primary selection:bg-accent-primary selection:text-bg-void">
+        <ClientProviders>
           {children}
-        </RouteTransition>
-        <Toaster />
+          <Toaster />
+        </ClientProviders>
       </body>
     </html>
   );
