@@ -80,7 +80,7 @@ export function FinalCTA() {
 
             {/* 4. Footer Metadata (Very Subtle) */}
             <div className="absolute bottom-8 left-0 right-0 px-6 md:px-12 z-10">
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left border-t border-white/5 pt-6">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left pt-6">
                     <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest">
                         © 2026 404ghost · Bharat Singh Parihar
                     </span>

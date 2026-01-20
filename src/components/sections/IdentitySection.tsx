@@ -5,7 +5,14 @@ import { useMotion } from '@/hooks/useMotion';
 import Image from 'next/image';
 
 export function IdentitySection() {
-    const { state } = useMotion();
+    // Safe fallback for useMotion
+    let state = { isIdle: false };
+    try {
+        const motionContext = useMotion();
+        state = motionContext.state;
+    } catch (error) {
+        // MotionProvider not available, use default state
+    }
 
     return (
         <section className="min-h-[80vh] py-24 px-6 md:px-12 relative flex items-center">
@@ -43,13 +50,7 @@ export function IdentitySection() {
                         I focus on building systems that are <span className="text-white">production-ready</span>, <span className="text-white">research-grounded</span>, and architecturally sound.
                     </motion.div>
 
-                    <motion.div
-                        initial={{ scaleX: 0 }}
-                        whileInView={{ scaleX: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1.5, delay: 0.4, ease: "circOut" }}
-                        className="mt-12 md:mt-16 w-12 h-[1px] bg-white/20 origin-left"
-                    />
+                    {/* Removed decorative line for seamless look */}
                 </div>
 
                 {/* Column 2: Photo Identity (Right) */}
@@ -59,7 +60,7 @@ export function IdentitySection() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative w-full max-w-md aspect-[3/4] rounded-sm overflow-hidden group border border-white/5 bg-white/5"
+                        className="relative w-full max-w-md aspect-[3/4] rounded-sm overflow-hidden group" /* Removed border and bg for seamless look */
                     >
                         {/* Image Container */}
                         <div className="absolute inset-0">
@@ -74,9 +75,7 @@ export function IdentitySection() {
                         {/* Cinematic Overlays */}
                         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-60 pointer-events-none" />
 
-                        {/* Corner Accents - Engineered Feel */}
-                        <div className="absolute top-4 left-4 w-2 h-2 border-t border-l border-white/30" />
-                        <div className="absolute bottom-4 right-4 w-2 h-2 border-b border-r border-white/30" />
+                        {/* Removed corner accents for seamless look */}
                     </motion.div>
                 </div>
 

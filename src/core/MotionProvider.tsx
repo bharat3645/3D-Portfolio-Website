@@ -80,10 +80,11 @@ export function MotionProvider({ children }: MotionProviderProps) {
     useEffect(() => {
         // SCROLL SETUP
         const lenis = new Lenis({
-            lerp: 0.05,
-            duration: 1.5,
-            wheelMultiplier: 1.2,
+            duration: 1.8, // Slower, more cinematic (Wix-style)
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Ultra-smooth easing
+            orientation: 'vertical',
             smoothWheel: true,
+            wheelMultiplier: 0.8, // Slower wheel scrolling for floating feel
         });
         lenisRef.current = lenis;
 

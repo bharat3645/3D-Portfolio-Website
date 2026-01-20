@@ -3,38 +3,38 @@
 import { motion } from 'framer-motion';
 import { Suspense, lazy } from 'react';
 import Image from 'next/image';
+import { DecodeText } from '@/components/ui/DecodeText';
 
 const Spline = lazy(() => import('@splinetool/react-spline'));
 
 export function HeroSection() {
     return (
-        <section className="relative h-screen w-full overflow-hidden bg-[#050505] selection:bg-white/20 selection:text-white">
-
+        <section
+            className="relative h-screen w-full overflow-hidden bg-[#050505] selection:bg-white/20 selection:text-white"
+        >
             {/* ================= BACKGROUND: Deep Void ================= */}
             <div className="absolute inset-0 z-0 bg-[#050505]">
-                <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70 pointer-events-none" />
+                <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
             </div>
 
-            {/* ================= SPLINE ENVIRONMENT ================= */}
-            <div className="absolute right-[-22%] top-0 h-full w-[72%] z-[1] pointer-events-none opacity-75 mix-blend-screen">
+            {/* ================= SPLINE ENVIRONMENT (Static, pointer-reactive only) ================= */}
+            <div className="absolute right-[-20%] top-0 h-full w-[70%] z-[1] opacity-70 mix-blend-screen">
                 <Suspense fallback={null}>
                     <Spline scene="/scene.splinecode" className="w-full h-full" />
                 </Suspense>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-transparent" />
             </div>
 
             {/* ================= SYSTEM NAV ================= */}
-            <nav className="absolute top-10 right-10 md:right-16 z-20 flex gap-8 md:gap-12">
+            <nav className="absolute top-10 right-10 md:right-16 z-20 flex gap-8 md:gap-12 mix-blend-difference">
                 {['Work', 'About', 'Contact'].map((item, i) => (
                     <motion.a
                         key={item}
                         href={`#${item.toLowerCase()}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.55 }}
-                        whileHover={{ opacity: 1, color: '#E61E32' }}
+                        whileHover={{ opacity: 1, color: '#E61E32', scale: 1.05 }}
                         transition={{ duration: 0.5, delay: 0.7 + i * 0.1 }}
-                        className="font-mono text-[10px] uppercase tracking-[0.28em] text-white cursor-pointer transition-colors duration-300"
+                        className="font-mono text-[10px] uppercase tracking-[0.28em] text-white cursor-pointer transition-all duration-300"
                     >
                         {item}
                     </motion.a>
@@ -42,7 +42,7 @@ export function HeroSection() {
             </nav>
 
             {/* ================= SYSTEM LOGO ================= */}
-            <div className="absolute top-10 left-8 md:left-16 z-20 flex items-center gap-4 group cursor-pointer">
+            <div className="absolute top-10 left-8 md:left-16 z-20 flex items-center gap-4 group cursor-pointer mix-blend-difference">
                 <div className="relative w-11 h-11 transition-transform duration-300 group-hover:scale-105 rounded-full overflow-hidden border border-white/10 bg-white/5">
                     <Image
                         src="/logo.jpg"
@@ -75,18 +75,12 @@ export function HeroSection() {
                         I’m Bharat Singh Parihar, aka
                     </motion.p>
 
-                    {/* PRIMARY IDENTITY: Massive Scale */}
-                    <motion.h1
-                        initial={{ opacity: 0, y: 24, filter: 'blur(10px)' }}
-                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                        transition={{
-                            duration: 1.6,
-                            ease: [0.16, 1, 0.3, 1],
-                        }}
-                        className="font-display font-black text-[clamp(5rem,15vw,12rem)] leading-[0.9] tracking-[-0.06em] text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-200 to-neutral-700 py-6 pr-6 drop-shadow-[0_0_60px_rgba(255,255,255,0.15)]"
-                    >
-                        404ghost
-                    </motion.h1>
+                    {/* PRIMARY IDENTITY: Decode Title */}
+                    <DecodeText
+                        text="404ghost"
+                        delay={0.3}
+                        className="font-display font-black text-[clamp(5rem,15vw,12rem)] leading-[0.9] tracking-[-0.03em] text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-200 to-neutral-700 py-6 pr-6 drop-shadow-[0_0_60px_rgba(255,255,255,0.15)]"
+                    />{/* Playfair Display for elegant sophistication */}
 
                     {/* ROLE STRIP */}
                     <motion.div

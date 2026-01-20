@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import { Inter, Oswald, Playfair_Display } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
 import './globals.css';
 import { ClientProviders } from '@/components/providers/ClientProviders';
@@ -11,10 +11,19 @@ const inter = Inter({
   display: 'swap',
 });
 
-const poppins = Poppins({
+// Cinematic display font - bold and impactful for hero
+const oswald = Oswald({
   subsets: ['latin'],
-  variable: '--font-poppins',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-oswald',
+  weight: ['200', '300', '400', '500', '600', '700'],
+  display: 'swap',
+});
+
+// Elegant serif for sophisticated touch
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
 });
 
@@ -35,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+    <html lang="en" className={`${inter.variable} ${oswald.variable} ${playfair.variable}`}>
       <body className="antialiased bg-bg-void text-text-primary selection:bg-accent-primary selection:text-bg-void">
         <ClientProviders>
           {children}

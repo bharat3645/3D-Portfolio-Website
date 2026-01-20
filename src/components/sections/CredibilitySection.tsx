@@ -4,7 +4,7 @@ import { SectionWrapper } from '@/components/hoc';
 
 function Credibility() {
     return (
-        <div className="py-24 w-full border-t border-white/5">
+        <div className="py-24 w-full">
 
             {/* 1. Leadership & Community */}
             <div className="mb-24">
@@ -38,7 +38,7 @@ function Credibility() {
                     {/* Education */}
                     <div>
                         <SectionLabel>Education</SectionLabel>
-                        <div className="pl-4 border-l border-white/10 space-y-8">
+                        <div className="pl-4 space-y-8">{/* Removed border for seamless look */}
                             <div>
                                 <h4 className="font-display text-xl font-bold text-text-primary">B.Tech (Hons.) in CSE — Data Science</h4>
                                 <p className="text-sm text-text-secondary mt-1">Symbiosis Institute of Technology, Nagpur</p>
@@ -54,7 +54,7 @@ function Credibility() {
                             <h4 className="text-lg text-text-primary font-display font-medium">5 SCOPUS Publications • 2 Book Chapters</h4>
                             <p className="text-xs text-text-muted mt-2 uppercase tracking-wide">Topics: Computer Vision, AI Research, Security, Federated Systems</p>
                         </div>
-                        <ul className="space-y-3 pl-4 border-l border-white/10">
+                        <ul className="space-y-3 pl-4">{/* Removed border for seamless look */}
                             <ListItem text="Publication 1 — IEEE ICISCT 2024 (SCOPUS)" />
                             <ListItem text="Publication 2 — IEEE ICISCT 2024 (SCOPUS)" />
                             <ListItem text="Publication 3 — IEEE ICIPCT 2025 (SCOPUS)" />
@@ -79,12 +79,12 @@ function Credibility() {
                     <SectionLabel>Certifications & Credentials</SectionLabel>
 
                     {/* TIER 1: PRIMARY / ENTERPRISE CERTIFICATIONS */}
-                    <div className="mb-12 pb-8 border-b-2 border-accent-primary/20">
+                    <div className="mb-12 pb-8">{/* Removed border for seamless look */}
                         <h4 className="font-mono text-xs text-accent-primary uppercase tracking-widest mb-6 flex items-center gap-2">
                             <span className="w-3 h-3 bg-accent-primary/30 rounded-sm"></span>
                             Enterprise Certifications
                         </h4>
-                        <div className="space-y-6 pl-4 border-l-2 border-accent-primary/40">
+                        <div className="space-y-6 pl-4">{/* Removed border for seamless look */}
 
                             {/* ServiceNow CAD */}
                             <div className="group">
@@ -132,7 +132,7 @@ function Credibility() {
                     </div>
 
                     {/* TIER 2: SUPPORTING TECHNICAL CERTIFICATIONS */}
-                    <div className="space-y-8 pl-4 border-l border-white/10">
+                    <div className="space-y-8 pl-4">{/* Removed border for seamless look */}
 
                         <CertGroup title="AI / ML & Accelerated Computing">
                             <ListItem text="NVIDIA — Fundamentals of Deep Learning (Dec 2023)" />
@@ -155,7 +155,7 @@ function Credibility() {
                         </CertGroup>
 
                         {/* Additional Badges Summary */}
-                        <div className="pt-4 border-t border-white/5">
+                        <div className="pt-4">{/* Removed border for seamless look */}
                             <p className="text-xs text-text-muted italic">
                                 + Additional Google Cloud & ML Skill Badges (2023–2024)
                             </p>
@@ -170,7 +170,7 @@ function Credibility() {
 }
 
 const RoleCard = ({ role, org, date, desc }: { role: string, org: string, date: string, desc: string }) => (
-    <div className="p-6 bg-white/[0.02] border border-white/5 rounded-sm hover:border-white/10 transition-colors">
+    <div className="p-6 rounded-sm transition-colors">{/* Removed bg and border for seamless look */}
         <h4 className="text-text-primary font-display font-medium text-lg leading-tight mb-2">{role}</h4>
         <p className="text-xs font-mono text-accent-primary mb-4">{org}</p>
         <p className="text-xs text-text-muted mb-4 font-mono">{date}</p>
@@ -179,7 +179,7 @@ const RoleCard = ({ role, org, date, desc }: { role: string, org: string, date: 
 );
 
 const SectionLabel = ({ children }: { children: React.ReactNode }) => (
-    <p className="font-mono text-xs text-accent-primary tracking-widest uppercase mb-8 border-l-2 border-accent-primary pl-4">
+    <p className="font-mono text-xs text-accent-primary tracking-widest uppercase mb-8 pl-4">{/* Removed border for seamless look */}
         {children}
     </p>
 );

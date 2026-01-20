@@ -146,13 +146,7 @@ export function WorkSection() {
                 ))}
             </div>
 
-            {/* Bottom Line */}
-            <motion.div
-                className="mt-32 h-[1px] bg-white/10 w-full"
-                initial={{ scaleX: 0 }}
-                animate={isInView ? { scaleX: 1 } : {}}
-                transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
-            />
+            {/* Removed bottom line for seamless look */}
         </section>
     );
 }
@@ -188,12 +182,12 @@ function ProjectCard({ project, index, isInView }: {
                    Shadow: None -> Crimson Glow
                 */}
                 <div className={`
-                    relative h-full min-h-[400px] bg-[#0A0A0A] 
-                    border transition-all duration-500 flex flex-col justify-between p-8 md:p-10
+                    relative h-full min-h-[400px] bg-transparent
+                    transition-all duration-500 flex flex-col justify-between p-8 md:p-10
                     ${isHovered
-                        ? 'border-[#E61E32]/50 bg-[#0F0F0F] shadow-[0_0_30px_-10px_rgba(230,30,50,0.3)]'
-                        : 'border-white/5 shadow-none'}
-                `}>
+                        ? 'bg-[#0A0A0A]/30 shadow-[0_0_30px_-10px_rgba(230,30,50,0.2)]'
+                        : 'shadow-none'}
+                `}>{/* Removed border and dark bg for seamless look */}
 
                     {/* Top Row: Meta */}
                     <div className="flex justify-between items-start mb-12">
@@ -243,9 +237,8 @@ function ProjectCard({ project, index, isInView }: {
 
                     {/* Bottom: Action */}
                     <div className={`
-                        mt-auto pt-6 border-t flex justify-between items-end transition-colors duration-500
-                        ${isHovered ? 'border-[#E61E32]/20' : 'border-white/5'}
-                    `}>
+                        mt-auto pt-6 flex justify-between items-end transition-colors duration-500
+                    `}>{/* Removed border for seamless look */}
                         <span className={`font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 ${isHovered ? 'text-[#E61E32]' : 'text-neutral-500'}`}>
                             View Project
                         </span>

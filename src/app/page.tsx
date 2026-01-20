@@ -60,7 +60,7 @@ export default function Home() {
 
       {/* 3. Main Content - Reveal after load */}
       <motion.div
-        className="relative z-10 space-y-32 md:space-y-48"
+        className="relative z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: isLoading ? 0 : 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}

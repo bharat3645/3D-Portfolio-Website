@@ -5,7 +5,7 @@ import { SectionWrapper } from '@/components/hoc';
 
 function CurrentRole() {
     return (
-        <div className="w-full py-12 border-b border-white/5 bg-white/[0.01]">
+        <div className="w-full py-12">{/* Removed bg-white/[0.01] for seamless experience */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 
                 {/* Role & Org */}
@@ -48,7 +48,7 @@ function CurrentRole() {
             </div>
 
             {/* Tags */}
-            <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-3">
+            <div className="mt-8 pt-6 flex flex-wrap gap-3">
                 {['Backend Engineering', 'System Design', 'AI/ML Integration', 'Scalable Web Architecture', 'Clean Code Practices'].map((tag) => (
                     <span key={tag} className="px-3 py-1 bg-white/5 rounded-full text-xs text-text-secondary font-mono">
                         {tag}

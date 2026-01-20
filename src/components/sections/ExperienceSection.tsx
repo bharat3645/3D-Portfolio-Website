@@ -16,7 +16,7 @@ function Experience() {
                 </h2>
             </motion.div>
 
-            <div className="space-y-16 border-l border-white/5 ml-3 md:ml-0 pl-8 md:pl-0">
+            <div className="space-y-16 ml-3 md:ml-0 pl-8 md:pl-0">
 
                 {/* Entry 1: Perplexity AI */}
                 <ExperienceItem
@@ -69,7 +69,7 @@ const ExperienceItem = ({ role, org, date, type, bullets, index }: { role: strin
         className="relative group"
     >
         {/* Timeline Dot */}
-        <div className="absolute -left-[37px] md:-left-4 top-2 w-3 h-3 rounded-full bg-bg-void border border-white/20 group-hover:border-accent-primary group-hover:bg-accent-primary transition-colors duration-300" />
+        <div className="absolute -left-[37px] md:-left-4 top-2 w-3 h-3 rounded-full bg-bg-void group-hover:bg-accent-primary transition-colors duration-300" />{/* Removed border for seamless look */}
 
         <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4 mb-3">
             <h3 className="font-display text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
