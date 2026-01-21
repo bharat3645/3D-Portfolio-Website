@@ -8,6 +8,7 @@ import { HeroSection } from '@/components/sections/HeroSection';
 import { Preloader } from '@/components/systems/Preloader';
 import { ParticleField } from '@/components/graphics/ParticleField';
 import { Vignette } from '@/components/graphics/Vignette';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 // Lazy load below-fold sections for better initial load performance
 const CurrentRoleSection = lazy(() => import('@/components/sections/CurrentRoleSection').then(m => ({ default: m.CurrentRoleSection })));
@@ -18,9 +19,13 @@ const WorkSection = lazy(() => import('@/components/sections/WorkSection').then(
 const CredibilitySection = lazy(() => import('@/components/sections/CredibilitySection').then(m => ({ default: m.CredibilitySection })));
 const FinalCTA = lazy(() => import('@/components/sections/FinalCTA').then(m => ({ default: m.FinalCTA })));
 
-// Memoized section wrapper for performance
+// Improved section wrapper with better loading state
 const SectionWrapper = memo(({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<div className="h-screen" />}>
+  <Suspense fallback={
+    <div className="h-screen flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-accent-crimson border-t-transparent rounded-full animate-spin" />
+    </div>
+  }>
     {children}
   </Suspense>
 ));
@@ -41,66 +46,68 @@ export default function Home() {
   }, [isLoading]);
 
   return (
-    <main className="relative min-h-screen w-full overflow-x-hidden bg-bg-void selection:bg-accent-primary selection:text-bg-void">
+    <ErrorBoundary>
+      <main className="relative min-h-screen w-full overflow-x-hidden bg-bg-void selection:bg-accent-primary selection:text-bg-void">
 
-      {/* 1. Cinematic Boot Loader */}
-      <AnimatePresence mode='wait'>
-        {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
-      </AnimatePresence>
+        {/* 1. Cinematic Boot Loader */}
+        <AnimatePresence mode='wait'>
+          {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+        </AnimatePresence>
 
-      {/* 2. Persistent Systems (Always Mounted) */}
-      <AmbientSystem />
-      {!isLoading && (
-        <>
-          {/* ParticleField suspended for stricter cinematic look */}
-          <ParticleField />
-          <Vignette />
-        </>
-      )}
-
-      {/* 3. Main Content - Reveal after load */}
-      <motion.div
-        className="relative z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isLoading ? 0 : 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      >
-        {/* Hero loads immediately */}
-        <HeroSection />
-
-        {/* Below-fold sections lazy loaded */}
+        {/* 2. Persistent Systems (Always Mounted) */}
+        <AmbientSystem />
         {!isLoading && (
           <>
-            <SectionWrapper>
-              <CurrentRoleSection />
-            </SectionWrapper>
-
-            <SectionWrapper>
-              <IdentitySection />
-            </SectionWrapper>
-
-            <SectionWrapper>
-              <SkillDomains />
-            </SectionWrapper>
-
-            <SectionWrapper>
-              <ExperienceSection />
-            </SectionWrapper>
-
-            <SectionWrapper>
-              <WorkSection />
-            </SectionWrapper>
-
-            <SectionWrapper>
-              <CredibilitySection />
-            </SectionWrapper>
-
-            <SectionWrapper>
-              <FinalCTA />
-            </SectionWrapper>
+            {/* ParticleField suspended for stricter cinematic look */}
+            <ParticleField />
+            <Vignette />
           </>
         )}
-      </motion.div>
-    </main>
+
+        {/* 3. Main Content - Reveal after load */}
+        <motion.div
+          className="relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isLoading ? 0 : 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        >
+          {/* Hero loads immediately */}
+          <HeroSection />
+
+          {/* Below-fold sections lazy loaded */}
+          {!isLoading && (
+            <>
+              <SectionWrapper>
+                <CurrentRoleSection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <IdentitySection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <SkillDomains />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <ExperienceSection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <WorkSection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <CredibilitySection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <FinalCTA />
+              </SectionWrapper>
+            </>
+          )}
+        </motion.div>
+      </main>
+    </ErrorBoundary>
   );
 }

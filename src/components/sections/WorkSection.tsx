@@ -93,7 +93,7 @@ export function WorkSection() {
     return (
         <section
             ref={sectionRef}
-            className="py-32 px-6 md:px-12 w-full max-w-screen-2xl mx-auto relative group/section"
+            className="py-16 px-6 md:px-12 w-full max-w-screen-2xl mx-auto relative group/section"
             id="work"
         >
             {/* Header: Subtle Fade & Platinum Gradient */}
@@ -172,9 +172,11 @@ function ProjectCard({ project, index, isInView }: {
             <Link
                 href={project.link}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="group relative block h-full"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                aria-label={`View ${project.title} project - ${project.category}`}
             >
                 {/* 
                    Card Container - Dark Glass + CRIMSON Interaction 

@@ -1,0 +1,21 @@
+{
+    "name": "404ghost Portfolio",
+    "short_name": "404ghost",
+    "description": "AI Systems Engineer specializing in GenAI, Distributed Systems, and Full-Stack Development",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#E61E32",
+    "icons": [
+        {
+            "src": "/logo.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg"
+        },
+        {
+            "src": "/logo.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg"
+        }
+    ]
+}

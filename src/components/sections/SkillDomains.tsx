@@ -29,7 +29,7 @@ const domains = [
 
 function Domains() {
     return (
-        <div className="py-24 w-full">
+        <div className="py-12 w-full">
             <motion.div variants={fadeIn("down", "tween", 0.1, 1)} className="mb-16">
                 <p className="font-mono text-xs text-white/50 tracking-widest uppercase mb-4">
                     Technical Architecture

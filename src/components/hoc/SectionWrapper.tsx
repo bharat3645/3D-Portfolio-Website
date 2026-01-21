@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { staggerContainer } from '@/core/animation';
 import { useRef } from 'react';
 
@@ -8,23 +8,14 @@ export const SectionWrapper = (Component: React.ComponentType, idName: string) =
     return function HOC() {
         const ref = useRef<HTMLDivElement>(null);
 
-        // Parallax scroll effect for smooth floating
-        const { scrollYProgress } = useScroll({
-            target: ref,
-            offset: ["start end", "end start"]
-        });
-
-        const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-        const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.8]);
-
         return (
             <motion.section
                 ref={ref}
                 variants={staggerContainer()}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: false, amount: 0.15 }}
-                className="max-w-7xl mx-auto relative z-0 py-0"
+                viewport={{ once: false, amount: 0.1 }}
+                className="max-w-7xl mx-auto relative z-0 px-4 sm:px-6 lg:px-8"
                 style={{
                     background: 'transparent',
                     borderTop: 'none',
@@ -35,19 +26,30 @@ export const SectionWrapper = (Component: React.ComponentType, idName: string) =
                     &nbsp;
                 </span>
 
-                {/* Wix-style smooth floating transition */}
+                {/* Advanced professional transition with scale and blur */}
                 <motion.div
-                    initial={{ opacity: 0, y: 80 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.15 }}
-                    transition={{
-                        duration: 1.8,
-                        ease: [0.25, 0.1, 0.25, 1], // Wix-style smooth easing
-                        opacity: { duration: 1.5 },
-                        y: { duration: 1.8, ease: [0.22, 1, 0.36, 1] }
+                    initial={{
+                        opacity: 0,
+                        y: 50,
+                        scale: 0.95,
+                        filter: "blur(10px)"
                     }}
-                    style={{ y, opacity }}
-                    className="py-16 md:py-24"
+                    whileInView={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        filter: "blur(0px)"
+                    }}
+                    viewport={{ once: false, amount: 0.1 }}
+                    transition={{
+                        duration: 1,
+                        ease: [0.16, 1, 0.3, 1], // Professional easing curve
+                        opacity: { duration: 0.8 },
+                        y: { duration: 1, ease: [0.22, 1, 0.36, 1] },
+                        scale: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                        filter: { duration: 0.8 }
+                    }}
+                    className="py-8 sm:py-10 md:py-12 lg:py-16"
                 >
                     <Component />
                 </motion.div>

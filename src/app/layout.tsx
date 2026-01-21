@@ -3,6 +3,7 @@ import { Inter, Oswald, Playfair_Display } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
 import './globals.css';
 import { ClientProviders } from '@/components/providers/ClientProviders';
+import { metadata as siteMetadata, structuredData } from './metadata';
 
 // Configure fonts
 const inter = Inter({
@@ -27,16 +28,8 @@ const playfair = Playfair_Display({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: '404ghost | Bharat',
-    template: '%s | Bharat',
-  },
-  description: 'Digital Reality Constructor. Systems Architect.',
-  icons: {
-    icon: '/logo.jpg',
-  },
-};
+// Export metadata from centralized config
+export const metadata: Metadata = siteMetadata;
 
 export default function RootLayout({
   children,
@@ -45,6 +38,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${oswald.variable} ${playfair.variable}`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </head>
       <body className="antialiased bg-bg-void text-text-primary selection:bg-accent-primary selection:text-bg-void">
         <ClientProviders>
           {children}

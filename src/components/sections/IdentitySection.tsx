@@ -44,7 +44,7 @@ export function IdentitySection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-                        className="max-w-xl text-base md:text-lg text-neutral-400 leading-relaxed font-body font-light"
+                        className="max-w-xl text-base md:text-lg text-neutral-400 leading-relaxed font-body font-light text-justify"
                     >
                         My work sits at the intersection of artificial intelligence, distributed systems, and product-grade engineering.
                         I focus on building systems that are <span className="text-white">production-ready</span>, <span className="text-white">research-grounded</span>, and architecturally sound.

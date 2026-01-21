@@ -4,7 +4,7 @@ import { SectionWrapper } from '@/components/hoc';
 
 function Credibility() {
     return (
-        <div className="py-24 w-full">
+        <div className="py-12 w-full">
 
             {/* 1. Leadership & Community */}
             <div className="mb-24">

@@ -80,11 +80,14 @@ export function MotionProvider({ children }: MotionProviderProps) {
     useEffect(() => {
         // SCROLL SETUP
         const lenis = new Lenis({
-            duration: 1.8, // Slower, more cinematic (Wix-style)
+            duration: 1.2, // Balanced smoothness (was 1.8, too slow)
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Ultra-smooth easing
             orientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 0.8, // Slower wheel scrolling for floating feel
+            wheelMultiplier: 1.0, // Normal wheel speed (was 0.8, too slow)
+            touchMultiplier: 2.0, // Better touch responsiveness
+            infinite: false,
+            syncTouch: true, // Better mobile experience
         });
         lenisRef.current = lenis;
 
@@ -119,10 +122,8 @@ export function MotionProvider({ children }: MotionProviderProps) {
             motionValues.current.time = time;
             motionValues.current.scrollY = window.scrollY;
 
-            // Lenis exposes velocity?
-            // Lenis type def might differ, but usually it's lenis.velocity
-            // @ts-ignore
-            motionValues.current.scrollVelocity = lenis.velocity || 0;
+            // Properly type Lenis velocity (Lenis exposes velocity but TypeScript def may not include it)
+            motionValues.current.scrollVelocity = (lenis as any).velocity || 0;
             motionValues.current.scrollProgress = lenis.progress || 0;
 
             // Update CSS Variables for easy access in CSS
