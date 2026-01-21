@@ -8,7 +8,7 @@ export function AmbientSystem() {
 
     return (
         <div
-            className="fixed inset-0 z-[-1] pointer-events-none bg-bg-void overflow-hidden transition-opacity duration-[2000ms]"
+            className="fixed inset-0 z-[-1] pointer-events-none bg-bg-void overflow-hidden transition-opacity duration-1000"
             style={{ opacity: state.isIdle ? 0.6 : 1 }} // Dim when idle for "Breathing" effect
         >
             <StarsCanvas />
