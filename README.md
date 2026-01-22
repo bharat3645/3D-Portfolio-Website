@@ -6,7 +6,7 @@ A cinematic, interactive, and AI-powered 3D portfolio website built with Next.js
 
 ## 🌌 Live Demo
 
-> [bharat3645.netlify.app](https://bharat3645.netlify.app/)
+> [bharat3645.vercel.app](https://bharat3645.vercel.app/)
 
 ---
 
