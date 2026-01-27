@@ -3,6 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useState, useRef } from 'react';
 import Link from 'next/link';
+import { portfolioData } from '@/data/portfolioData';
 
 interface Project {
     id: string;
@@ -17,74 +18,20 @@ interface Project {
     image?: string;
 }
 
-const projects: Project[] = [
-    {
-        id: '01',
-        title: 'GhostSync',
-        category: 'Distributed Systems',
-        year: '2026',
-        link: 'https://github.com/bharat3645/GhostSync',
-        role: 'System Architect',
-        problem: 'Real-time synchronization in distributed environments',
-        solution: 'Built backend infrastructure for real-time data flow',
-        tech: 'Node.js, gRPC, Event Streams',
-    },
-    {
-        id: '02',
-        title: 'PII Detection Engine',
-        category: 'Machine Learning Systems',
-        year: '2025',
-        link: 'https://github.com/bharat3645',
-        role: 'ML Engineer',
-        problem: 'Detect sensitive PII in large datasets',
-        solution: 'ML-driven detection engine for sensitive data',
-        tech: 'Python, ML Models, Security',
-    },
-    {
-        id: '03',
-        title: 'Federated Learning',
-        category: 'Federated ML',
-        year: '2025',
-        link: 'https://github.com/bharat3645',
-        role: 'Researcher',
-        problem: 'Anomaly detection without sharing raw data',
-        solution: 'Federated learning pipeline (~91% accuracy)',
-        tech: 'Federated ML, Privacy Architecture',
-    },
-    {
-        id: '04',
-        title: 'GigX',
-        category: 'Web3 Application',
-        year: '2024',
-        link: 'https://github.com/bharat3645',
-        role: 'Full Stack',
-        problem: 'Centralized freelancing lacks transparency',
-        solution: 'Ethereum-based marketplace with token task escrow',
-        tech: 'Next.js, Solidity, Docker',
-    },
-    {
-        id: '05',
-        title: 'Assistive CV',
-        category: 'AI for Accessibility',
-        year: '2024',
-        link: 'https://github.com/bharat3645',
-        role: 'Computer Vision',
-        problem: 'Real-time book text recognition for visually impaired',
-        solution: 'OCR+TTS pipeline with OpenCV & PyTesseract',
-        tech: 'Python, TTS, OpenCV',
-    },
-    {
-        id: '06',
-        title: 'DeepFake Detection',
-        category: 'Computer Vision',
-        year: '2024',
-        link: 'https://github.com/bharat3645',
-        role: 'Researcher',
-        problem: 'Distinguishing authentic vs deep-fake media',
-        solution: 'CNN + MCDM integration for accuracy improvement',
-        tech: 'PyTorch, CNN, MCDM',
-    }
-];
+
+const projects: Project[] = portfolioData.featuredProjects.map(p => ({
+    id: p.id,
+    title: p.title,
+    category: p.tagline, // Using tagline as category/subtitle
+    year: p.period.split(' ')[p.period.split(' ').length - 1], // Extract year
+    link: `/work/${p.id}`,
+    role: 'Lead Engineer', // Default role since it's not in data
+    problem: p.problem,
+    solution: p.solution,
+    tech: p.techStack.slice(0, 3).join(', '), // Take first 3 techs
+    image: p.image
+}));
+
 
 export function WorkSection() {
     const sectionRef = useRef(null);
@@ -171,8 +118,6 @@ function ProjectCard({ project, index, isInView }: {
         >
             <Link
                 href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="group relative block h-full"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
@@ -195,7 +140,7 @@ function ProjectCard({ project, index, isInView }: {
                     <div className="flex justify-between items-start mb-12">
                         <div className="flex flex-col gap-1">
                             <span className={`font-mono text-[10px] tracking-[0.2em] uppercase transition-colors duration-300 ${isHovered ? 'text-[#E61E32]' : 'text-neutral-500'}`}>
-                                {project.id} / {project.category}
+                                {String(index + 1).padStart(2, '0')} / {project.category}
                             </span>
                             <span className="font-mono text-[10px] text-neutral-600">
                                 {project.year}

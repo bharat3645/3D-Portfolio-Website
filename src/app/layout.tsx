@@ -47,6 +47,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-bg-void text-text-primary selection:bg-accent-primary selection:text-bg-void">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[9999] px-4 py-2 bg-white text-black font-mono">
+          Skip to content
+        </a>
         <ClientProviders>
           {children}
           <Toaster />

@@ -3,9 +3,12 @@
 import { useMotion } from '@/hooks/useMotion';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTheme } from '@/core/ThemeProvider';
+import { Sun, Moon } from 'lucide-react';
 
 export function SystemHUD() {
     const { state } = useMotion();
+    const { theme, toggleTheme } = useTheme();
     const [time, setTime] = useState('');
 
     useEffect(() => {
@@ -18,6 +21,21 @@ export function SystemHUD() {
 
     return (
         <div className="fixed inset-0 z-[100] pointer-events-none p-6 md:p-12 flex flex-col justify-between select-none mix-blend-difference">
+            {/* Top Left: Theme Toggle */}
+            <div className="absolute top-8 left-6 md:left-12 pointer-events-auto">
+                <button
+                    onClick={toggleTheme}
+                    className="flex items-center gap-2 font-mono text-xs text-text-secondary hover:text-white transition-colors group"
+                >
+                    <div className="p-2 border border-white/10 rounded-full group-hover:bg-white/10 transition-colors">
+                        {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    </div>
+                    <span className="opacity-50 group-hover:opacity-100">
+                        {theme === 'dark' ? 'LIGHT_MODE' : 'DARK_MODE'}
+                    </span>
+                </button>
+            </div>
+
             {/* Top Right: System Status & Clock (Zone 1) */}
             <div className="absolute top-8 right-6 md:right-12 flex flex-col items-end gap-2 text-right">
                 <div className="flex flex-col gap-1 items-end">

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { blogPosts } from '@/data/blog-posts';
 import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
@@ -42,10 +43,12 @@ export default function BlogPostPage({ params }: Props) {
       {/* Hero Header */}
       <div className="relative h-[60vh] w-full overflow-hidden mb-12">
         <div className="absolute inset-0">
-          <img
+          <Image
             src={post.image}
             alt={post.title}
-            className="w-full h-full object-cover"
+            fill
+            priority
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-bg-void via-bg-void/80 to-transparent" />
         </div>

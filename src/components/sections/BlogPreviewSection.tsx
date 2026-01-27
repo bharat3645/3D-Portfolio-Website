@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Calendar } from 'lucide-react';
 import { blogPosts } from '@/data/blog-posts';
 
@@ -46,10 +47,12 @@ export function BlogPreviewSection() {
             >
               <Link href={`/blog/${post.slug}`}>
                 <div className="relative aspect-video overflow-hidden rounded-lg mb-4 border border-white/10">
-                  <img
+                  <Image
                     src={post.image}
                     alt={post.title}
-                    className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
                 </div>

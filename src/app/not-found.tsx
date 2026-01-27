@@ -22,12 +22,20 @@ export default function NotFound() {
                     Sector Not Found
                 </h2>
 
-                <Link
-                    href="/"
-                    className="inline-block px-8 py-4 bg-white/5 border border-white/10 rounded-sm font-mono text-sm tracking-widest hover:bg-white/10 hover:border-accent-crimson transition-all duration-300"
-                >
-                    Return to Base
-                </Link>
+                <div className="flex gap-4 justify-center">
+                    <Link
+                        href="/"
+                        className="inline-block px-8 py-4 bg-white/5 border border-white/10 rounded-sm font-mono text-sm tracking-widest hover:bg-white/10 hover:border-accent-crimson transition-all duration-300"
+                    >
+                        Return to Base
+                    </Link>
+                    <Link
+                        href="/blog"
+                        className="inline-block px-8 py-4 bg-transparent border border-white/10 rounded-sm font-mono text-sm tracking-widest hover:bg-white/5 hover:text-accent-primary transition-all duration-300"
+                    >
+                        View Logs
+                    </Link>
+                </div>
             </div>
 
             <div className="absolute bottom-8 text-[10px] font-mono text-white/20 uppercase tracking-widest">

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { blogPosts } from '@/data/blog-posts';
 import { ArrowRight, Calendar, Clock, Tag } from 'lucide-react';
@@ -33,10 +34,12 @@ export default function BlogPage() {
               className="group relative flex flex-col h-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-accent-primary/50 transition-colors"
             >
               <div className="relative aspect-video overflow-hidden">
-                <img
+                <Image
                   src={post.image}
                   alt={post.title}
-                  className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover transform group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
                 <div className="absolute top-4 left-4">

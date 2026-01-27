@@ -149,7 +149,26 @@ export const portfolioData = {
                 "Knowledge graph reasoning"
             ],
             github: "https://github.com/bharat3645",
-            featured: true
+            featured: true,
+            image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+The GenAI Realtime Assistant represents a leap forward in how we interact with knowledge bases. By combining GraphRAG with vector databases, we achieved a system that understands not just the "what" but the "how" and "why" of complex queries.
+
+## Key Challenges
+- **Latency:** Traditional RAG pipelines were too slow for real-time conversation.
+- **Context Loss:** Long conversations often lost context.
+- **Hallucination:** Pure LLM approaches were prone to making things up.
+
+## The Solution
+We implemented a multi-agent system using LangGraph where specialized agents handle different aspects of the query. The Knowledge Graph (Neo4j) provides structured ground truth, while the Vector DB (FAISS) handles unstructured semantic search.
+
+### Architecture Highlights
+1. **Router Agent:** Classifies intent and routes to the best sub-agent.
+2. **Graph Agent:** Traverses Neo4j to find connected entities.
+3. **Vector Agent:** Retrieves semantic matches from documentation.
+4. **Synthesis Agent:** Combines all retrieval results into a coherent answer.
+            `
         },
         {
             id: "federated-learning",
@@ -171,7 +190,22 @@ export const portfolioData = {
                 "Privacy-preserving ML"
             ],
             github: "https://github.com/bharat3645",
-            featured: true
+            featured: true,
+            image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+In the financial sector, data privacy is paramount. This project demonstrates how we can train powerful fraud detection models across multiple institutions without ever sharing the raw transaction data.
+
+## Methodology
+Using FedML, we established a central server that coordinates the training process. Each participating node (bank) trains a local model on its private data and sends only the model updates (gradients) to the central server.
+
+### Privacy Mechanisms
+- **Differential Privacy:** Added noise to gradients to prevent reverse-engineering of data.
+- **Secure Aggregation:** The central server only sees the aggregated updates, not individual contributions.
+
+## Results
+The system achieved 91% accuracy in detecting fraudulent transactions, comparable to centralized training but with zero data leakage.
+            `
         },
         {
             id: "gigx",
@@ -195,7 +229,18 @@ export const portfolioData = {
             ],
             github: "https://github.com/bharat3645",
             demo: "https://gigx-demo.vercel.app",
-            featured: true
+            featured: true,
+            image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+GigX addresses the high fees and lack of trust in traditional freelance platforms. By leveraging Ethereum smart contracts, we created a trustless escrow system where funds are only released when work is verified.
+
+## Smart Contract Architecture
+The core is an Escrow contract that holds funds. It implements a "2-of-3" multi-signature scheme for dispute resolution (Client, Freelancer, Arbiter).
+
+## Frontend Integration
+We used Next.js with Wagmi and Viem for seamless wallet connection and contract interaction. The UI updates in real-time as blockchain state changes.
+            `
         },
         {
             id: "ai-image-encryption",
@@ -216,7 +261,18 @@ export const portfolioData = {
                 "Enhanced security",
                 "Reduced computational overhead"
             ],
-            featured: true
+            featured: true,
+            image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+Standard encryption like AES is secure but not optimized for the massive size of image data. This project explores using Generative Adversarial Networks (GANs) combined with LSTMs to create a chaotic encryption map.
+
+## The Approach
+The GAN generates a chaotic key map based on a seed. The LSTM then processes the image pixels in sequence, using the chaotic map to permute and diffuse the pixel values.
+
+## Performance
+The one-pass workflow significantly reduces encryption time compared to traditional multi-round block ciphers, making it suitable for real-time video streams.
+            `
         },
         {
             id: "deepfake-detection",
@@ -238,7 +294,15 @@ export const portfolioData = {
                 "MCDM-enhanced reliability"
             ],
             research: "Summer Research Internship - PGDAV College, University of Delhi",
-            featured: true
+            featured: true,
+            image: "https://images.unsplash.com/photo-1589254065878-42c9da9e2583?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+With the rise of realistic AI-generated media, distinguishing truth from fiction is a critical challenge. This system uses a custom CNN architecture focused on detecting artifacts common in GAN-generated faces.
+
+## Multi-Criteria Decision Making (MCDM)
+We didn't rely on a single model. We used an ensemble approach where MCDM algorithms (like TOPSIS) weighed the outputs of different detectors (eye blinking, lip sync, artifact analysis) to make a final decision.
+            `
         },
         {
             id: "book-detection",
@@ -259,7 +323,48 @@ export const portfolioData = {
                 "Accessibility enhancement",
                 "Low-latency processing"
             ],
-            featured: true
+            featured: true,
+            image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+Access to physical books remains a challenge for the visually impaired. This computer vision system runs on low-power devices to detect book pages, unwarp them, and read the text aloud.
+
+## Pipeline
+1. **Detection:** YOLOv8 detects the book object.
+2. **Segmentation:** Extracts the page area.
+3. **Dewarping:** Corrects the perspective and page curl.
+4. **OCR:** Tesseract extracts text.
+5. **TTS:** Converts text to speech.
+            `
+        },
+        {
+            id: "smart-city-traffic",
+            title: "Smart City Traffic Management",
+            tagline: "IoT & AI based adaptive traffic control",
+            period: "Aug 2024 - Oct 2024",
+            problem: "Static traffic timers cause unnecessary congestion.",
+            solution: "Developed an adaptive system using camera feeds to adjust signal timings in real-time.",
+            architecture: [
+                "YOLO for vehicle counting",
+                "Edge devices for processing",
+                "Cloud dashboard for analytics"
+            ],
+            techStack: ["Python", "YOLO", "MQTT", "AWS IoT"],
+            impact: [
+                "Reduced wait times by 30%",
+                "Lowered emissions",
+                "Real-time analytics"
+            ],
+            github: "https://github.com/bharat3645",
+            featured: true,
+            image: "https://images.unsplash.com/photo-1449824913929-203aa91bb651?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+Urban congestion is a major issue. This project utilizes existing CCTV infrastructure to count vehicles and optimize traffic light timings dynamically.
+
+## System Design
+Edge devices (Raspberry Pi/Jetson Nano) process video feeds locally to count vehicles. This data is sent via MQTT to a central server which calculates optimal green light durations using a weighted algorithm.
+            `
         }
     ],
 
