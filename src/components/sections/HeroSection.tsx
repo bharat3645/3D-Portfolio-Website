@@ -38,10 +38,10 @@ export function HeroSection() {
                 className="absolute top-6 sm:top-8 md:top-10 right-6 sm:right-10 md:right-16 z-20 flex gap-4 sm:gap-6 md:gap-8 lg:gap-12 mix-blend-difference"
                 aria-label="Main navigation"
             >
-                {['Work', 'About', 'Contact'].map((item, i) => (
+{['Work', 'About', 'Blog', 'Contact'].map((item, i) => (
                     <motion.a
                         key={item}
-                        href={`#${item.toLowerCase()}`}
+                        href={item === 'Blog' ? '/blog' : `#${item.toLowerCase()}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.55 }}
                         whileHover={{ opacity: 1, color: '#E61E32', scale: 1.05 }}

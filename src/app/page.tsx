@@ -16,6 +16,9 @@ const IdentitySection = lazy(() => import('@/components/sections/IdentitySection
 const SkillDomains = lazy(() => import('@/components/sections/SkillDomains').then(m => ({ default: m.SkillDomains })));
 const ExperienceSection = lazy(() => import('@/components/sections/ExperienceSection').then(m => ({ default: m.ExperienceSection })));
 const WorkSection = lazy(() => import('@/components/sections/WorkSection').then(m => ({ default: m.WorkSection })));
+const BlogPreviewSection = lazy(() => import('@/components/sections/BlogPreviewSection').then(m => ({ default: m.BlogPreviewSection })));
+const TestimonialsSection = lazy(() => import('@/components/sections/Testimonials').then(m => ({ default: m.TestimonialsSection })));
+const ContactSection = lazy(() => import('@/components/sections/Contact').then(m => ({ default: m.ContactSection })));
 const CredibilitySection = lazy(() => import('@/components/sections/CredibilitySection').then(m => ({ default: m.CredibilitySection })));
 const FinalCTA = lazy(() => import('@/components/sections/FinalCTA').then(m => ({ default: m.FinalCTA })));
 
@@ -99,6 +102,18 @@ export default function Home() {
 
               <SectionWrapper>
                 <CredibilitySection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <BlogPreviewSection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <TestimonialsSection />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <ContactSection />
               </SectionWrapper>
 
               <SectionWrapper>
