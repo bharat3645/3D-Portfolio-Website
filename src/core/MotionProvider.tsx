@@ -80,14 +80,14 @@ export function MotionProvider({ children }: MotionProviderProps) {
     useEffect(() => {
         // SCROLL SETUP
         const lenis = new Lenis({
-            duration: 1.2, // Balanced smoothness (was 1.8, too slow)
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Ultra-smooth easing
+            duration: 1.4,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             orientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 1.0, // Normal wheel speed (was 0.8, too slow)
-            touchMultiplier: 2.0, // Better touch responsiveness
+            wheelMultiplier: 0.9,
+            touchMultiplier: 1.8,
             infinite: false,
-            syncTouch: true, // Better mobile experience
+            syncTouch: true,
         });
         lenisRef.current = lenis;
 

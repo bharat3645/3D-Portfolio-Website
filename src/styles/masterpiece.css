@@ -736,3 +736,83 @@
 @media (max-width: 768px) {
   .section-spotlight::before { display: none; }
 }
+
+/* ===================================
+   SCROLL PERFORMANCE & GPU COMPOSITING
+   =================================== */
+
+/* Promote key animated layers to GPU composite */
+.cursor-dot,
+.cursor-ring-wrapper,
+.aurora-orb,
+.dot-nav,
+.noise-overlay {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Defer paint + layout for all off-screen sections */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 800px;
+}
+
+/* Hero always visible — no deferral */
+#hero {
+  content-visibility: visible;
+  contain-intrinsic-size: unset;
+}
+
+/* Work cards: GPU-promoted, no layout thrash */
+.work-card-inner {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Marquee: keep on compositor */
+.marquee-content {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Framer Motion elements — hint browser early */
+[data-framer-component-type],
+[style*='translateY'],
+[style*='translateX'],
+[style*='scale'],
+[style*='rotate'] {
+  backface-visibility: hidden;
+}
+
+/* Lenis smooth scroll target */
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Remove expensive box-shadow recalculation on hover for non-focused cards */
+@media (hover: hover) {
+  .work-card-shadow {
+    transition: box-shadow 0.4s ease;
+    will-change: box-shadow;
+  }
+}
+
+/* Passive scroll hint for browsers */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent sub-pixel jitter on transforms */
+.font-display,
+.font-mono {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
+}
