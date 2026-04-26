@@ -295,7 +295,7 @@ The one-pass workflow significantly reduces encryption time compared to traditio
             ],
             research: "Summer Research Internship - PGDAV College, University of Delhi",
             featured: true,
-            image: "https://images.unsplash.com/photo-1589254065878-42c9da9e2583?q=80&w=2000&auto=format&fit=crop",
+            image: "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?q=80&w=2000&auto=format&fit=crop",
             longDescription: `
 ## Overview
 With the rise of realistic AI-generated media, distinguishing truth from fiction is a critical challenge. This system uses a custom CNN architecture focused on detecting artifacts common in GAN-generated faces.
@@ -357,7 +357,7 @@ Access to physical books remains a challenge for the visually impaired. This com
             ],
             github: "https://github.com/bharat3645",
             featured: true,
-            image: "https://images.unsplash.com/photo-1449824913929-203aa91bb651?q=80&w=2000&auto=format&fit=crop",
+            image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=2000&auto=format&fit=crop",
             longDescription: `
 ## Overview
 Urban congestion is a major issue. This project utilizes existing CCTV infrastructure to count vehicles and optimize traffic light timings dynamically.

@@ -1,212 +1,255 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { portfolioData } from '@/data/portfolioData';
-import { SectionHeading } from '@/components/ui/TextReveal';
 
-interface Project {
-    id: string;
-    title: string;
-    category: string;
-    year: string;
-    link: string;
-    problem: string;
-    solution: string;
-    tech: string;
-    image?: string;
-}
+const EASE = [0.16, 1, 0.3, 1] as const;
 
-const projects: Project[] = portfolioData.featuredProjects.map(p => ({
+const projects = portfolioData.featuredProjects.map((p, i) => ({
     id: p.id,
+    index: i,
     title: p.title,
-    category: p.tagline,
+    tagline: p.tagline,
     year: p.period.split(' ').at(-1) ?? '',
     link: `/work/${p.id}`,
-    problem: p.problem,
-    solution: p.solution,
-    tech: p.techStack.slice(0, 3).join(', '),
+    tech: p.techStack.slice(0, 4),
+    impact: p.impact[0] ?? '',
     image: p.image,
 }));
 
-export function WorkSection() {
-    const sectionRef = useRef<HTMLElement>(null);
-    const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
+// ─── Individual card ─────────────────────────────────────────────────────────
+function ProjectCard({ p }: { p: typeof projects[0] }) {
+    const ref = useRef<HTMLDivElement>(null);
 
     return (
-        <section
-            ref={sectionRef}
-            className="py-16 px-6 md:px-12 w-full max-w-screen-2xl mx-auto relative"
-            id="work"
-        >
-            <SectionHeading
-                label="Selected Works"
-                heading="Engineering Impact"
-                subtext="Production-grade systems built to solve real problems"
-            />
+        <Link href={p.link} className="block flex-shrink-0 w-[90vw] sm:w-[70vw] md:w-[55vw] lg:w-[42vw] h-full group">
+            <div
+                ref={ref}
+                data-cursor="view"
+                data-cursor-label="OPEN"
+                className="relative h-full overflow-hidden rounded-sm border border-white/[0.06] bg-[#080808]"
+            >
+                {/* Full-bleed image */}
+                {p.image && (
+                    <div className="absolute inset-0">
+                        <Image
+                            src={p.image}
+                            alt={p.title}
+                            fill
+                            sizes="(max-width: 768px) 90vw, 55vw"
+                            className="object-cover opacity-30 group-hover:opacity-45 transition-opacity duration-700 scale-105 group-hover:scale-100"
+                            style={{ transition: 'opacity 0.7s ease, transform 1.2s cubic-bezier(0.16,1,0.3,1)' }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent" />
+                    </div>
+                )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-                {projects.map((project, index) => (
-                    <ProjectCard
-                        key={project.id}
-                        project={project}
-                        index={index}
-                        isInView={isInView}
-                    />
-                ))}
+                {/* Content */}
+                <div className="relative z-10 h-full flex flex-col justify-between p-8 md:p-10 lg:p-12">
+                    {/* Top row */}
+                    <div className="flex items-start justify-between">
+                        <div className="overflow-hidden">
+                            <motion.span
+                                initial={{ y: '110%' }}
+                                whileInView={{ y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.7, ease: EASE }}
+                                className="block font-mono text-[10px] tracking-[0.3em] uppercase text-[#E61E32]"
+                            >
+                                {String(p.index + 1).padStart(2, '0')} — {p.year}
+                            </motion.span>
+                        </div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#E61E32] opacity-60 group-hover:opacity-100 group-hover:shadow-[0_0_12px_#E61E32] transition-all duration-300" />
+                    </div>
+
+                    {/* Bottom content */}
+                    <div>
+                        {/* Tagline */}
+                        <div className="overflow-hidden mb-3">
+                            <motion.p
+                                initial={{ y: '110%' }}
+                                whileInView={{ y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
+                                className="font-mono text-[11px] tracking-widest uppercase text-white/40"
+                            >
+                                {p.tagline}
+                            </motion.p>
+                        </div>
+
+                        {/* Title */}
+                        <div className="overflow-hidden mb-5">
+                            <motion.h3
+                                initial={{ y: '110%' }}
+                                whileInView={{ y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.85, delay: 0.12, ease: EASE }}
+                                className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight"
+                            >
+                                {p.title}
+                            </motion.h3>
+                        </div>
+
+                        {/* Impact line */}
+                        {p.impact && (
+                            <div className="overflow-hidden mb-6">
+                                <motion.p
+                                    initial={{ y: '110%' }}
+                                    whileInView={{ y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.7, delay: 0.18, ease: EASE }}
+                                    className="text-white/50 text-sm font-light"
+                                >
+                                    {p.impact}
+                                </motion.p>
+                            </div>
+                        )}
+
+                        {/* Tech tags */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.25 }}
+                            className="flex flex-wrap gap-2"
+                        >
+                            {p.tech.map(t => (
+                                <span
+                                    key={t}
+                                    className="font-mono text-[9px] tracking-[0.16em] uppercase px-2.5 py-1 border border-white/10 text-white/35 rounded-full"
+                                >
+                                    {t}
+                                </span>
+                            ))}
+                        </motion.div>
+                    </div>
+                </div>
+
+                {/* Hover line */}
+                <div className="absolute bottom-0 left-0 h-[1px] bg-[#E61E32] w-0 group-hover:w-full transition-all duration-700" />
             </div>
-        </section>
+        </Link>
     );
 }
 
-function ProjectCard({ project, index, isInView }: {
-    project: Project;
-    index: number;
-    isInView: boolean;
-}) {
-    const cardRef = useRef<HTMLDivElement>(null);
-    const [isHovered, setIsHovered] = useState(false);
-    const [tilt, setTilt] = useState({ x: 0, y: 0 });
-    const [shine, setShine] = useState({ x: 50, y: 50 });
+// ─── Section ─────────────────────────────────────────────────────────────────
+export function WorkSection() {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const headingRef = useRef<HTMLDivElement>(null);
+    const headingInView = useInView(headingRef, { once: true });
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
-        setTilt({ x: (y - 0.5) * -12, y: (x - 0.5) * 12 });
-        setShine({ x: x * 100, y: y * 100 });
-    };
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ['start start', 'end end'],
+    });
 
-    const handleMouseLeave = () => {
-        setTilt({ x: 0, y: 0 });
-        setShine({ x: 50, y: 50 });
-        setIsHovered(false);
-    };
+    // Pan left: 7 cards, each ~42vw + gap, scroll through (7-1) cards
+    const x = useTransform(scrollYProgress, [0, 1], ['0vw', '-260vw']);
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{ perspective: '1200px' }}
+        <section
+            ref={containerRef}
+            id="work"
+            style={{ height: `${projects.length * 110}vh` }}
+            className="relative"
         >
-            <div
-                ref={cardRef}
-                onMouseMove={handleMouseMove}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={handleMouseLeave}
-                data-cursor="view"
-                data-cursor-label="VIEW"
-                style={{
-                    transform: `perspective(1200px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-                    transition: isHovered
-                        ? 'transform 0.15s ease-out'
-                        : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
-                    transformStyle: 'preserve-3d',
-                }}
-            >
-                <Link
-                    href={project.link}
-                    className="group relative block h-full"
-                    tabIndex={0}
-                    aria-label={`View ${project.title} project`}
-                >
-                    <div className={`
-                        relative min-h-[400px] h-full bg-transparent
-                        flex flex-col justify-between p-8 md:p-10
-                        transition-all duration-500 overflow-hidden
-                        ${isHovered ? 'bg-[#0A0A0A]/40 shadow-[0_30px_80px_-20px_rgba(230,30,50,0.18)]' : ''}
-                    `}>
-                        {/* Shine overlay */}
-                        {isHovered && (
-                            <div
-                                className="absolute inset-0 pointer-events-none z-0"
-                                style={{
-                                    background: `radial-gradient(circle at ${shine.x}% ${shine.y}%, rgba(255,255,255,0.06) 0%, transparent 65%)`,
-                                }}
-                            />
-                        )}
+            {/* Decorative bg text */}
+            <div className="sticky top-0 h-screen overflow-hidden pointer-events-none" aria-hidden="true">
+                <div className="absolute inset-0 flex items-center justify-end pr-8 md:pr-16 overflow-hidden">
+                    <span
+                        className="font-display font-black text-[22vw] text-white/[0.025] tracking-tighter select-none leading-none"
+                        // @ts-ignore
+                        string="parallax"
+                        string-speed="-0.08"
+                    >
+                        WORK
+                    </span>
+                </div>
+            </div>
 
-                        {/* Project image: top-right floating preview */}
-                        {project.image && (
-                            <div
-                                className="absolute top-4 right-4 w-24 h-16 rounded overflow-hidden z-10"
-                                style={{
-                                    opacity: isHovered ? 1 : 0,
-                                    transform: `scale(${isHovered ? 1 : 0.8}) translateZ(20px)`,
-                                    transition: 'opacity 0.4s ease, transform 0.4s ease',
-                                }}
-                            >
-                                <Image
-                                    src={project.image}
-                                    alt={project.title}
-                                    fill
-                                    className="object-cover"
-                                    sizes="96px"
-                                />
-                            </div>
-                        )}
-
-                        {/* Top Row: Meta */}
-                        <div className="flex justify-between items-start mb-12 relative z-10">
-                            <div className="flex flex-col gap-1">
-                                <span className={`font-mono text-[10px] tracking-[0.2em] uppercase transition-colors duration-300 ${isHovered ? 'text-[#E61E32]' : 'text-neutral-500'}`}>
-                                    {String(index + 1).padStart(2, '0')} / {project.category}
-                                </span>
-                                <span className="font-mono text-[10px] text-neutral-600">
-                                    {project.year}
-                                </span>
-                            </div>
-                            <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${isHovered ? 'bg-[#E61E32] shadow-[0_0_10px_#E61E32]' : 'bg-white/10'}`} />
-                        </div>
-
-                        {/* Middle: Title + Tech */}
-                        <div className="relative z-10">
-                            <h3 className="font-display text-3xl md:text-4xl font-bold text-neutral-200 mb-2 group-hover:text-white transition-colors duration-300">
-                                {project.title}
-                            </h3>
-                            <p className="font-mono text-xs text-neutral-500 mb-6 group-hover:text-neutral-400 transition-colors">
-                                {project.tech}
-                            </p>
-
-                            <div className="overflow-hidden">
-                                <motion.div
-                                    animate={{
-                                        height: isHovered ? 'auto' : 0,
-                                        opacity: isHovered ? 1 : 0,
-                                        marginBottom: isHovered ? 24 : 0,
-                                    }}
-                                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            {/* Sticky scroll panel */}
+            <div className="sticky top-0 h-screen flex flex-col overflow-hidden -mt-screen" style={{ marginTop: '-100vh' }}>
+                {/* Header */}
+                <div ref={headingRef} className="pt-16 pb-10 px-6 md:px-12 lg:px-16 flex-shrink-0">
+                    <div className="flex items-end justify-between max-w-[90rem] mx-auto">
+                        <div>
+                            <div style={{ overflow: 'hidden' }}>
+                                <motion.p
+                                    initial={{ y: '110%' }}
+                                    animate={headingInView ? { y: 0 } : {}}
+                                    transition={{ duration: 0.7, ease: EASE }}
+                                    className="font-mono text-[10px] text-[#E61E32] tracking-[0.35em] uppercase mb-4"
                                 >
-                                    <p className="text-sm text-neutral-400 font-light leading-relaxed max-w-md">
-                                        <span className="text-white block mb-1">Problem:</span> {project.problem}
-                                        <br /><br />
-                                        <span className="text-white block mb-1">Solution:</span> {project.solution}
-                                    </p>
-                                </motion.div>
+                                    Selected Works
+                                </motion.p>
+                            </div>
+                            <div style={{ overflow: 'hidden' }}>
+                                <motion.h2
+                                    initial={{ y: '110%' }}
+                                    animate={headingInView ? { y: 0 } : {}}
+                                    transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+                                    className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight"
+                                >
+                                    Engineering Impact
+                                </motion.h2>
                             </div>
                         </div>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={headingInView ? { opacity: 1 } : {}}
+                            transition={{ duration: 0.8, delay: 0.3 }}
+                            className="hidden md:flex items-center gap-3 font-mono text-[10px] tracking-[0.2em] uppercase text-white/25"
+                        >
+                            <span>Scroll to explore</span>
+                            <svg width="20" height="8" viewBox="0 0 20 8" fill="none">
+                                <path d="M0 4h18M14 1l4 3-4 3" stroke="currentColor" strokeWidth="0.8"/>
+                            </svg>
+                        </motion.div>
+                    </div>
+                </div>
 
-                        {/* Bottom: Action */}
-                        <div className="mt-auto pt-6 flex justify-between items-end relative z-10">
-                            <span className={`font-mono text-[10px] uppercase tracking-widest transition-colors duration-300 ${isHovered ? 'text-[#E61E32]' : 'text-neutral-500'}`}>
-                                View Project
-                            </span>
-                            <motion.svg
-                                animate={{ x: isHovered ? 4 : 0, y: isHovered ? -4 : 0 }}
-                                transition={{ duration: 0.2 }}
-                                width="12" height="12" viewBox="0 0 12 12" fill="none"
-                                className={`transition-colors duration-300 ${isHovered ? 'text-[#E61E32]' : 'text-neutral-500'}`}
+                {/* Horizontal scroll track */}
+                <div className="flex-1 flex items-center overflow-hidden">
+                    <motion.div
+                        style={{ x }}
+                        className="flex gap-4 md:gap-6 pl-6 md:pl-12 lg:pl-16 pr-6"
+                        // @ts-ignore
+                        string="glide"
+                    >
+                        {projects.map(p => (
+                            <ProjectCard key={p.id} p={p} />
+                        ))}
+                        {/* End spacer card */}
+                        <div className="flex-shrink-0 w-[20vw] h-full flex flex-col items-center justify-center">
+                            <Link
+                                href="/work/genai-assistant"
+                                className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/20 hover:text-[#E61E32] transition-colors duration-300 group flex items-center gap-3"
+                                data-cursor="hover"
                             >
-                                <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" strokeWidth="1" strokeLinecap="square" />
-                            </motion.svg>
+                                <span>View all</span>
+                                <svg width="16" height="6" viewBox="0 0 16 6" fill="none" className="group-hover:translate-x-1 transition-transform duration-300">
+                                    <path d="M0 3h14M10 1l4 2-4 2" stroke="currentColor" strokeWidth="0.8"/>
+                                </svg>
+                            </Link>
+                        </div>
+                    </motion.div>
+                </div>
+
+                {/* Scroll progress bar */}
+                <div className="flex-shrink-0 px-6 md:px-12 lg:px-16 pb-8">
+                    <div className="max-w-[90rem] mx-auto">
+                        <div className="h-[1px] bg-white/[0.06] relative overflow-hidden rounded-full">
+                            <motion.div
+                                className="absolute inset-y-0 left-0 bg-[#E61E32]"
+                                style={{ scaleX: scrollYProgress, transformOrigin: 'left' }}
+                            />
                         </div>
                     </div>
-                </Link>
+                </div>
             </div>
-        </motion.div>
+        </section>
     );
 }

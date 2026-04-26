@@ -1,81 +1,153 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Calendar } from 'lucide-react';
+import { useRef } from 'react';
 import { blogPosts } from '@/data/blog-posts';
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const CATEGORY_COLORS: Record<string, string> = {
+    'System Architecture': '#06B6D4',
+    'Performance':         '#E61E32',
+    'GenAI':               '#E61E32',
+    'Web3':                '#7C3AED',
+    'Engineering':         '#06B6D4',
+};
+
 export function BlogPreviewSection() {
-  const recentPosts = blogPosts.slice(0, 3);
+    const headingRef = useRef<HTMLDivElement>(null);
+    const inView = useInView(headingRef, { once: true, margin: '-80px' });
 
-  return (
-    <section className="py-24 px-4 relative z-10" id="blog">
-      <div className="max-w-7xl mx-auto">
+    return (
+        <section className="relative z-10 overflow-hidden section-spotlight" id="blog">
+            {/* Decorative bg text */}
+            <div className="section-bg-text" aria-hidden="true">
+                <span
+                    // @ts-ignore
+                    string="parallax"
+                    string-speed="-0.06"
+                >
+                    LOGS
+                </span>
+            </div>
+
+            <div className="relative z-10">
+                {/* Header */}
+                <div ref={headingRef} className="px-6 md:px-12 lg:px-16 pt-24 pb-16 max-w-[90rem] mx-auto">
+                    <div className="flex items-end justify-between flex-wrap gap-6">
+                        <div>
+                            <div style={{ overflow: 'hidden' }}>
+                                <motion.p
+                                    initial={{ y: '110%' }}
+                                    animate={inView ? { y: 0 } : {}}
+                                    transition={{ duration: 0.7, ease: EASE }}
+                                    className="font-mono text-[10px] text-[#E61E32] tracking-[0.35em] uppercase mb-4"
+                                >
+                                    Engineering Logs
+                                </motion.p>
+                            </div>
+                            <div style={{ overflow: 'hidden' }}>
+                                <motion.h2
+                                    initial={{ y: '110%' }}
+                                    animate={inView ? { y: 0 } : {}}
+                                    transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+                                    className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight"
+                                >
+                                    Latest Logs
+                                </motion.h2>
+                            </div>
+                        </div>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={inView ? { opacity: 1 } : {}}
+                            transition={{ duration: 0.8, delay: 0.3 }}
+                        >
+                            <Link
+                                href="/blog"
+                                data-cursor="hover"
+                                className="font-mono text-[10px] tracking-[0.25em] uppercase text-white/25 hover:text-[#E61E32] transition-colors duration-300 flex items-center gap-3 group"
+                            >
+                                <span>All logs</span>
+                                <svg width="16" height="6" viewBox="0 0 16 6" fill="none" className="group-hover:translate-x-1 transition-transform duration-300">
+                                    <path d="M0 3h14M10 1l4 2-4 2" stroke="currentColor" strokeWidth="0.8"/>
+                                </svg>
+                            </Link>
+                        </motion.div>
+                    </div>
+                </div>
+
+                {/* Cinematic 1px-gap grid */}
+                <div className="blog-cinematic-grid">
+                    {blogPosts.map((post, i) => (
+                        <BlogCard key={post.slug} post={post} index={i} />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+function BlogCard({ post, index }: { post: typeof blogPosts[0]; index: number }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const inView = useInView(ref, { once: true, margin: '-60px' });
+    const accent = CATEGORY_COLORS[post.category] ?? '#E61E32';
+
+    return (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
+            ref={ref}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: (index % 3) * 0.1, ease: EASE }}
         >
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold font-oswald text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-4">
-              LATEST LOGS
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Engineering insights and research notes.
-            </p>
-          </div>
-          <Link href="/blog">
-            <span className="flex items-center gap-2 text-white hover:text-accent-primary transition-colors cursor-pointer group">
-              View All Logs
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Link>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {recentPosts.map((post, index) => (
-            <motion.div
-              key={post.slug}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group cursor-pointer"
-            >
-              <Link href={`/blog/${post.slug}`}>
-                <div className="relative aspect-video overflow-hidden rounded-lg mb-4 border border-white/10">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transform group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
-                </div>
-                
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                  <Calendar className="w-3 h-3" />
-                  {post.date}
-                  <span className="w-1 h-1 rounded-full bg-white/30 mx-1" />
-                  {post.category}
+            <Link href={`/blog/${post.slug}`} className="blog-cinematic-card block" data-cursor="hover">
+                {/* Image */}
+                <div className="relative w-full aspect-video overflow-hidden rounded-sm mb-6">
+                    <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover opacity-60 group-hover:opacity-80 transition-all duration-700"
+                        style={{ transition: 'opacity 0.7s ease, transform 1s cubic-bezier(0.16,1,0.3,1)' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+                    {/* Category pill */}
+                    <div className="absolute top-3 left-3">
+                        <span
+                            className="font-mono text-[9px] tracking-[0.2em] uppercase px-2 py-1 rounded-full border"
+                            style={{ color: accent, borderColor: `${accent}30`, background: `${accent}10` }}
+                        >
+                            {post.category}
+                        </span>
+                    </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-2 font-oswald group-hover:text-accent-primary transition-colors">
-                  {post.title}
-                </h3>
-                
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {post.excerpt}
+                {/* Meta */}
+                <div className="flex items-center gap-3 mb-3">
+                    <span className="font-mono text-[9px] text-white/25 tracking-widest">{post.date}</span>
+                    <span className="w-px h-3 bg-white/10" />
+                    <span className="font-mono text-[9px] text-white/25 tracking-widest">{post.readTime}</span>
+                </div>
+
+                {/* Title */}
+                <div style={{ overflow: 'hidden' }} className="mb-3">
+                    <motion.h3
+                        initial={{ y: '110%' }}
+                        animate={inView ? { y: 0 } : {}}
+                        transition={{ duration: 0.75, delay: (index % 3) * 0.1 + 0.15, ease: EASE }}
+                        className="font-display text-xl md:text-2xl font-bold text-white leading-snug tracking-tight"
+                    >
+                        {post.title}
+                    </motion.h3>
+                </div>
+
+                {/* Excerpt */}
+                <p className="text-white/35 text-sm font-light leading-relaxed line-clamp-2">
+                    {post.excerpt}
                 </p>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+            </Link>
+        </motion.div>
+    );
 }

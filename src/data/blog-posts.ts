@@ -271,6 +271,142 @@ Profile first. Assume nothing. And DPR clamp to 1.5.
     `
   },
   {
+    slug: 'graphrag-production',
+    title: 'GraphRAG in Production: Beyond Simple Vector Search',
+    excerpt: 'Why knowledge graphs outperform pure vector databases for complex reasoning tasks — and the architecture decisions behind building a real-time GraphRAG assistant with Neo4j, FAISS, and LangGraph.',
+    date: '2025-03-02',
+    readTime: '10 min read',
+    category: 'GenAI',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2000&auto=format&fit=crop',
+    content: `
+# GraphRAG in Production: Beyond Simple Vector Search
+
+Every RAG tutorial shows the same architecture: chunk documents, embed them, store in a vector DB, retrieve by cosine similarity, feed to an LLM. It works. For simple Q&A over a single document corpus, it works well.
+
+It fails badly when queries require multi-hop reasoning. "What projects involved both Neo4j and real-time processing, and what were their accuracy metrics?" A vector search returns documents that contain these terms. A knowledge graph traverses relationships.
+
+This is the problem I built a solution for.
+
+## The Limitation of Pure Vector Search
+
+Vector search answers: "what content is semantically similar to this query?"
+
+It cannot answer: "what entities are connected through this chain of relationships?"
+
+Consider a query like: *"Which of my research projects used federated approaches, and what privacy mechanisms did they employ?"*
+
+A vector search will find documents mentioning "federated" and "privacy." But it won't know that these documents describe distinct projects with specific relationships to specific privacy techniques — unless those exact sentences happen to appear in the retrieved chunks.
+
+Knowledge graphs model this explicitly. Nodes are entities (Project, Technique, Author, Metric). Edges are relationships (USES_TECHNIQUE, ACHIEVES_ACCURACY, PUBLISHED_IN).
+
+## The Architecture
+
+The GenAI Realtime Assistant I built uses a three-layer retrieval stack:
+
+\`\`\`
+Query
+  ↓
+Intent Classifier (what type of query is this?)
+  ├── Factual lookup → Neo4j Cypher query
+  ├── Semantic search → FAISS vector search
+  └── Complex reasoning → Both, then synthesis
+  ↓
+Retrieval (parallel)
+  ↓
+LangGraph synthesis agent
+  ↓
+Response
+\`\`\`
+
+\`\`\`python
+class GraphRAGRetriever:
+    def __init__(self, neo4j_driver, faiss_index, embedder, llm):
+        self.graph = neo4j_driver
+        self.vector = faiss_index
+        self.embedder = embedder
+        self.llm = llm
+
+    def retrieve(self, query: str) -> dict:
+        # Parallel retrieval
+        graph_results = self._graph_search(query)
+        vector_results = self._vector_search(query)
+
+        # LLM-guided fusion
+        return self._synthesize(query, graph_results, vector_results)
+
+    def _graph_search(self, query: str) -> list:
+        # Extract entities from query
+        entities = self._extract_entities(query)
+        cypher = self._generate_cypher(entities)
+        return self.graph.execute(cypher)
+
+    def _generate_cypher(self, entities: list) -> str:
+        # LLM generates Cypher from extracted entities
+        prompt = f"Generate Cypher query for entities: {entities}"
+        return self.llm.predict(prompt)
+\`\`\`
+
+## Building the Knowledge Graph
+
+The graph schema models the domain:
+
+\`\`\`cypher
+// Nodes
+CREATE (p:Project {name: "GenAI Assistant", period: "Feb-May 2025"})
+CREATE (t:Technology {name: "LangChain", category: "Orchestration"})
+CREATE (m:Metric {name: "Latency", value: "120ms", unit: "ms"})
+
+// Relationships
+CREATE (p)-[:USES_TECHNOLOGY]->(t)
+CREATE (p)-[:ACHIEVES_METRIC]->(m)
+CREATE (p)-[:SOLVES_PROBLEM {description: "Multi-hop reasoning"}]->(:Problem)
+\`\`\`
+
+The graph is populated automatically from structured data (portfolio data, paper abstracts, project READMEs) using an extraction pipeline.
+
+## LangGraph for Multi-Step Reasoning
+
+The synthesis layer uses LangGraph — a graph-based agent framework — to orchestrate retrieval and response generation:
+
+\`\`\`python
+from langgraph.graph import Graph
+
+def create_rag_graph():
+    graph = Graph()
+
+    graph.add_node("classifier", classify_intent)
+    graph.add_node("graph_retriever", retrieve_from_graph)
+    graph.add_node("vector_retriever", retrieve_from_vector)
+    graph.add_node("synthesizer", synthesize_response)
+
+    graph.add_edge("classifier", "graph_retriever")
+    graph.add_edge("classifier", "vector_retriever")
+    graph.add_edge("graph_retriever", "synthesizer")
+    graph.add_edge("vector_retriever", "synthesizer")
+
+    return graph.compile()
+\`\`\`
+
+The graph executor runs retrieval nodes in parallel, then passes both result sets to the synthesizer. This dramatically reduces latency compared to sequential retrieval.
+
+## Results
+
+Against a test set of 50 complex multi-hop queries:
+- Pure vector RAG: 64% correctly answered
+- GraphRAG hybrid: 89% correctly answered
+
+The gap widens on queries requiring 3+ hop reasoning (domain → technique → metric → paper). Vector search essentially collapses on these.
+
+The latency story is more nuanced: graph traversal is typically faster than vector search for known-entity queries, but the NLP pipeline for Cypher generation adds overhead. At p95, the hybrid system was ~240ms vs ~180ms for pure vector.
+
+For production use, the accuracy gain justifies the latency cost. For simple document Q&A, pure vector is still the right tool.
+
+---
+
+*This architecture powers the GenAI Realtime Assistant project. The SCOPUS-indexed paper covers the theoretical foundations; this post covers the implementation decisions.*
+    `
+  },
+  {
     slug: 'nextjs-14-server-actions',
     title: 'Building Type-Safe APIs with Next.js 14 Server Actions',
     excerpt: 'Why Server Actions are the most underrated feature in modern React — and how to use them to build end-to-end type-safe full-stack applications without a separate API layer.',
@@ -455,6 +591,50 @@ For mutations from React components — contact forms, auth flows, data writes, 
 ---
 
 *This pattern powers the contact form on this portfolio. The full implementation uses React Hook Form for client-side UX + Zod on the server action boundary + Resend for email delivery.*
+    `
+  },
+  {
+    slug: 'smart-contracts-gigx',
+    title: 'Smart Contracts in Practice: Building GigX',
+    excerpt: 'Building a decentralized freelance marketplace on Ethereum exposed every gap between smart contract theory and production reality — re-entrancy, gas costs, oracle problems, and why trustless does not mean frictionless.',
+    date: '2025-02-14',
+    readTime: '8 min read',
+    category: 'Web3',
+    image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2000&auto=format&fit=crop',
+    content: `
+# Smart Contracts in Practice: Building GigX
+
+GigX is a decentralized freelance marketplace where smart contracts handle escrow, dispute resolution, and payment release. No intermediary. No platform taking 20%. Trustless by design.
+
+## The Core Escrow Contract
+
+The central mechanic: client deposits ETH, freelancer delivers work, client approves, funds release. Disputes go to a 2-of-3 arbiter vote.
+
+The key security lesson: always update state before making external calls (checks-effects-interactions pattern). Re-entrancy attacks exploit contracts that transfer funds before marking a transaction complete.
+
+## Gas Costs: The Real UX Killer
+
+Creating a gig costs ~80,000 gas. At 20 gwei with ETH at $3000, that is $4.80 per transaction — nearly 10% overhead on a $50 gig, worse than Upwork.
+
+The solution: Layer 2. Deploying to Polygon reduced costs by ~100x. For any consumer-facing dApp, mainnet Ethereum is the wrong environment. Start on Arbitrum, Polygon, or Base.
+
+## Dispute Resolution Without an Oracle
+
+Pure on-chain work verification requires an oracle, which reintroduces centralized trust. GigX uses a 2-of-3 multi-signature scheme: any two of client, freelancer, and platform arbiter agreeing releases funds. Simple, effective, auditable.
+
+## Frontend: Wagmi v2 + Viem
+
+Wagmi v2 is the correct Web3 React stack in 2025. Type-safe, hooks-based, handles wallet state and transaction lifecycle without the ceremony of ethers.js or web3.js.
+
+## What I Would Do Differently
+
+Start on L2 immediately. Use TheGraph for event indexing from day one. Keep only trust-critical logic on-chain. Run Slither static analysis before any deployment touching real value.
+
+The blockchain constraint forces you to think about trust at a systems level in a way nothing else does.
+
+---
+
+*GigX is pinned on GitHub (AppXcess-GigX). Contracts deployed on Sepolia testnet.*
     `
   }
 ];

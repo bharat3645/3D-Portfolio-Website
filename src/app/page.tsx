@@ -20,7 +20,7 @@ const WorkSection         = lazy(() => import('@/components/sections/WorkSection
 const StatsSection        = lazy(() => import('@/components/sections/StatsSection').then(m => ({ default: m.StatsSection })));
 const TechSection         = lazy(() => import('@/components/sections/TechSection').then(m => ({ default: m.TechSection })));
 const BlogPreviewSection  = lazy(() => import('@/components/sections/BlogPreviewSection').then(m => ({ default: m.BlogPreviewSection })));
-const TestimonialsSection = lazy(() => import('@/components/sections/Testimonials').then(m => ({ default: m.TestimonialsSection })));
+// TestimonialsSection removed — replaced by extra blog logs
 const CredibilitySection  = lazy(() => import('@/components/sections/CredibilitySection').then(m => ({ default: m.CredibilitySection })));
 const ContactSection      = lazy(() => import('@/components/sections/Contact').then(m => ({ default: m.ContactSection })));
 const FinalCTA            = lazy(() => import('@/components/sections/FinalCTA').then(m => ({ default: m.FinalCTA })));
@@ -79,7 +79,6 @@ export default function Home() {
                             <Wrap><CredibilitySection /></Wrap>
                             <Wrap><TechSection /></Wrap>
                             <Wrap><BlogPreviewSection /></Wrap>
-                            <Wrap><TestimonialsSection /></Wrap>
                             <Wrap><ContactSection /></Wrap>
                             <Wrap><FinalCTA /></Wrap>
                         </>
