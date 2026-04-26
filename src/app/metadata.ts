@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { portfolioData } from '@/data/portfolioData';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://404ghost.dev';
 const siteName = '404ghost | Bharat Singh Parihar';
@@ -91,7 +92,7 @@ export const structuredData = {
     },
     sameAs: [
         'https://github.com/bharat3645',
-        'https://linkedin.com/in/bharat-singh-parihar', // Update with actual LinkedIn
+        'https://linkedin.com/in/bharat-singh-parihar',
     ],
     knowsAbout: [
         'Artificial Intelligence',
@@ -102,3 +103,41 @@ export const structuredData = {
         'System Architecture',
     ],
 };
+
+export const creativeWorkSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: '404ghost Portfolio',
+    author: {
+        '@type': 'Person',
+        name: 'Bharat Singh Parihar',
+    },
+    description: siteDescription,
+    url: siteUrl,
+    image: siteImage,
+    genre: 'Portfolio',
+    keywords: 'AI, Portfolio, Web Development, 3D Website',
+};
+
+// Portfolio ItemList Schema
+export const portfolioSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: portfolioData.featuredProjects.map((project, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+            '@type': 'SoftwareSourceCode',
+            name: project.title,
+            description: project.tagline,
+            url: project.github || project.demo || siteUrl,
+            image: project.image,
+            programmingLanguage: project.techStack,
+            author: {
+                '@type': 'Person',
+                name: 'Bharat Singh Parihar'
+            }
+        }
+    }))
+};
+

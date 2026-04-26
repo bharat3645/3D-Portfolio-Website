@@ -6,123 +6,86 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { AmbientSystem } from '@/components/systems/AmbientSystem';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { Preloader } from '@/components/systems/Preloader';
-import { ParticleField } from '@/components/graphics/ParticleField';
 import { Vignette } from '@/components/graphics/Vignette';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { CustomCursor } from '@/components/systems/CustomCursor';
+import { DotNav } from '@/components/systems/DotNav';
 
-// Lazy load below-fold sections for better initial load performance
-const CurrentRoleSection = lazy(() => import('@/components/sections/CurrentRoleSection').then(m => ({ default: m.CurrentRoleSection })));
-const IdentitySection = lazy(() => import('@/components/sections/IdentitySection').then(m => ({ default: m.IdentitySection })));
-const SkillDomains = lazy(() => import('@/components/sections/SkillDomains').then(m => ({ default: m.SkillDomains })));
-const ExperienceSection = lazy(() => import('@/components/sections/ExperienceSection').then(m => ({ default: m.ExperienceSection })));
-const WorkSection = lazy(() => import('@/components/sections/WorkSection').then(m => ({ default: m.WorkSection })));
-const BlogPreviewSection = lazy(() => import('@/components/sections/BlogPreviewSection').then(m => ({ default: m.BlogPreviewSection })));
+// Lazy-loaded sections
+const CurrentRoleSection  = lazy(() => import('@/components/sections/CurrentRoleSection').then(m => ({ default: m.CurrentRoleSection })));
+const IdentitySection     = lazy(() => import('@/components/sections/IdentitySection').then(m => ({ default: m.IdentitySection })));
+const SkillDomains        = lazy(() => import('@/components/sections/SkillDomains').then(m => ({ default: m.SkillDomains })));
+const ExperienceSection   = lazy(() => import('@/components/sections/ExperienceSection').then(m => ({ default: m.ExperienceSection })));
+const WorkSection         = lazy(() => import('@/components/sections/WorkSection').then(m => ({ default: m.WorkSection })));
+const StatsSection        = lazy(() => import('@/components/sections/StatsSection').then(m => ({ default: m.StatsSection })));
+const TechSection         = lazy(() => import('@/components/sections/TechSection').then(m => ({ default: m.TechSection })));
+const BlogPreviewSection  = lazy(() => import('@/components/sections/BlogPreviewSection').then(m => ({ default: m.BlogPreviewSection })));
 const TestimonialsSection = lazy(() => import('@/components/sections/Testimonials').then(m => ({ default: m.TestimonialsSection })));
-const ContactSection = lazy(() => import('@/components/sections/Contact').then(m => ({ default: m.ContactSection })));
-const CredibilitySection = lazy(() => import('@/components/sections/CredibilitySection').then(m => ({ default: m.CredibilitySection })));
-const FinalCTA = lazy(() => import('@/components/sections/FinalCTA').then(m => ({ default: m.FinalCTA })));
+const CredibilitySection  = lazy(() => import('@/components/sections/CredibilitySection').then(m => ({ default: m.CredibilitySection })));
+const ContactSection      = lazy(() => import('@/components/sections/Contact').then(m => ({ default: m.ContactSection })));
+const FinalCTA            = lazy(() => import('@/components/sections/FinalCTA').then(m => ({ default: m.FinalCTA })));
 
-// Improved section wrapper with better loading state
-const SectionWrapper = memo(({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={
-    <div className="h-screen flex items-center justify-center">
-      <div className="w-8 h-8 border-2 border-accent-crimson border-t-transparent rounded-full animate-spin" />
+const Fallback = memo(() => (
+    <div className="h-48 flex items-center justify-center">
+        <div className="w-5 h-5 border border-accent-crimson/40 border-t-accent-crimson rounded-full animate-spin" />
     </div>
-  }>
-    {children}
-  </Suspense>
 ));
-SectionWrapper.displayName = 'SectionWrapper';
+Fallback.displayName = 'Fallback';
+
+const Wrap = memo(({ children }: { children: React.ReactNode }) => (
+    <Suspense fallback={<Fallback />}>{children}</Suspense>
+));
+Wrap.displayName = 'Wrap';
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
-  // Prevent scrolling during load
-  useEffect(() => {
-    if (isLoading) {
-      document.body.style.overflow = 'hidden';
-      window.scrollTo(0, 0); // Force top
-    } else {
-      document.body.style.overflow = '';
-      window.scrollTo(0, 0); // Reset position for entry
-    }
-  }, [isLoading]);
+    useEffect(() => {
+        document.body.style.overflow = isLoading ? 'hidden' : '';
+        if (!isLoading) window.scrollTo(0, 0);
+    }, [isLoading]);
 
-  return (
-    <ErrorBoundary>
-      <main className="relative min-h-screen w-full overflow-x-hidden bg-bg-void selection:bg-accent-primary selection:text-bg-void">
+    return (
+        <ErrorBoundary>
+            <CustomCursor />
+            {!isLoading && <DotNav />}
 
-        {/* 1. Cinematic Boot Loader */}
-        <AnimatePresence mode='wait'>
-          {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
-        </AnimatePresence>
+            <main className="relative min-h-screen w-full overflow-x-hidden bg-bg-void selection:bg-accent-primary selection:text-bg-void">
 
-        {/* 2. Persistent Systems (Always Mounted) */}
-        <AmbientSystem />
-        {!isLoading && (
-          <>
-            {/* ParticleField suspended for stricter cinematic look */}
-            <ParticleField />
-            <Vignette />
-          </>
-        )}
+                <AnimatePresence mode="wait">
+                    {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+                </AnimatePresence>
 
-        {/* 3. Main Content - Reveal after load */}
-        <motion.div
-          className="relative z-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isLoading ? 0 : 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        >
-          {/* Hero loads immediately */}
-          <HeroSection />
+                {/* Ambient (Stars + Aurora + Noise) */}
+                <AmbientSystem />
+                {!isLoading && <Vignette />}
 
-          {/* Below-fold sections lazy loaded */}
-          {!isLoading && (
-            <>
-              <SectionWrapper>
-                <CurrentRoleSection />
-              </SectionWrapper>
+                <motion.div
+                    className="relative z-10"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isLoading ? 0 : 1 }}
+                    transition={{ duration: 1.5, ease: 'easeOut' }}
+                >
+                    <HeroSection />
 
-              <SectionWrapper>
-                <IdentitySection />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <SkillDomains />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <ExperienceSection />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <WorkSection />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <CredibilitySection />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <BlogPreviewSection />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <TestimonialsSection />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <ContactSection />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <FinalCTA />
-              </SectionWrapper>
-            </>
-          )}
-        </motion.div>
-      </main>
-    </ErrorBoundary>
-  );
+                    {!isLoading && (
+                        <>
+                            <Wrap><CurrentRoleSection /></Wrap>
+                            <Wrap><IdentitySection /></Wrap>
+                            <Wrap><SkillDomains /></Wrap>
+                            <Wrap><StatsSection /></Wrap>
+                            <Wrap><ExperienceSection /></Wrap>
+                            <Wrap><WorkSection /></Wrap>
+                            <Wrap><CredibilitySection /></Wrap>
+                            <Wrap><TechSection /></Wrap>
+                            <Wrap><BlogPreviewSection /></Wrap>
+                            <Wrap><TestimonialsSection /></Wrap>
+                            <Wrap><ContactSection /></Wrap>
+                            <Wrap><FinalCTA /></Wrap>
+                        </>
+                    )}
+                </motion.div>
+            </main>
+        </ErrorBoundary>
+    );
 }

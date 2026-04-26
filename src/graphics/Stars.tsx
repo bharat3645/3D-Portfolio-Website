@@ -1,64 +1,90 @@
 'use client';
 
-import { PointMaterial, Points, Preload } from '@react-three/drei'
-import { Canvas, useFrame } from '@react-three/fiber'
-import * as random from 'maath/random/dist/maath-random.esm'
-import React, { Suspense, useRef, useState } from 'react'
-
+import { useEffect, useRef } from 'react';
 import { useMotion } from '@/hooks/useMotion';
 
-const Stars = (props: any) => {
-    const ref = useRef<any>();
-    const { state } = useMotion(); // Access Global Engine
-
-    // Generate sphere points - pinned to avoid hydration mismatch if possible, or use useMemo
-    const [sphere] = useState(() => random.inSphere(new Float32Array(5001), { radius: 1.2 }));
-
-    useFrame((_, delta) => {
-        if (ref.current) {
-            // REACTIVITY: Warp Speed on Scroll & Idle Drift
-            const velocity = Math.abs(state.scrollVelocity || 0);
-
-            if (velocity > 0.1) {
-                // Fast scroll = Warp
-                ref.current.rotation.x -= (velocity * 0.0005);
-                ref.current.rotation.y -= (velocity * 0.0005);
-            } else if (state.isIdle) {
-                // Idle = Deep Space Drift (Slower, different axis)
-                ref.current.rotation.z += delta / 50;
-                ref.current.rotation.y -= delta / 30;
-            } else {
-                // Normal
-                ref.current.rotation.x -= delta / 10;
-                ref.current.rotation.y -= delta / 15;
-            }
-        }
-    })
-
-    return (
-        <group rotation={[0, 0, Math.PI / 4]}>
-            <Points ref={ref} positions={sphere} stride={3} frustumCulled {...props} >
-                <PointMaterial
-                    transparent
-                    color="#f272c8" // Use a color that fits 404ghost? Or keep reference pink for now.
-                    size={0.002}
-                    sizeAttenuation={true}
-                    depthWrite={false}
-                />
-            </Points>
-        </group>
-    )
+interface Star {
+    x: number; y: number;
+    size: number; opacity: number; speed: number;
 }
 
-export const StarsCanvas = () => {
+const StarField = () => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const { state } = useMotion();
+    const stateRef = useRef(state);
+    stateRef.current = state;
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let W = (canvas.width = window.innerWidth);
+        let H = (canvas.height = window.innerHeight);
+
+        const stars: Star[] = Array.from({ length: 220 }, () => ({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            size: Math.random() * 1.4 + 0.2,
+            opacity: Math.random() * 0.55 + 0.1,
+            speed: Math.random() * 0.12 + 0.04,
+        }));
+
+        let last = 0;
+        const FPS = 30;
+        const interval = 1000 / FPS;
+        let raf: number;
+
+        const draw = (ts: number) => {
+            raf = requestAnimationFrame(draw);
+            if (ts - last < interval) return;
+            last = ts;
+
+            ctx.clearRect(0, 0, W, H);
+
+            const vel = Math.abs(stateRef.current.scrollVelocity || 0);
+            const warp = 1 + Math.min(vel * 4, 8);
+
+            stars.forEach(s => {
+                s.y += s.speed * warp;
+                if (s.y > H) { s.y = 0; s.x = Math.random() * W; }
+
+                ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+                if (warp > 2) {
+                    // Warp speed: draw as streaks
+                    ctx.fillRect(s.x, s.y, s.size, s.speed * warp * 2);
+                } else {
+                    ctx.fillRect(s.x, s.y, s.size, s.size);
+                }
+            });
+        };
+
+        raf = requestAnimationFrame(draw);
+
+        const onResize = () => {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', onResize, { passive: true });
+
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener('resize', onResize);
+        };
+    }, []);
+
     return (
-        <div className="w-full h-auto absolute inset-0 z-[-1] pointer-events-none">
-            <Canvas camera={{ position: [0, 0, 1] }}>
-                <Suspense fallback={null}>
-                    <Stars />
-                </Suspense>
-                <Preload all />
-            </Canvas>
-        </div>
-    )
-}
+        <canvas
+            ref={canvasRef}
+            className="w-full h-full absolute inset-0 pointer-events-none"
+            aria-hidden="true"
+        />
+    );
+};
+
+export const StarsCanvas = () => (
+    <div className="w-full h-full absolute inset-0 pointer-events-none">
+        <StarField />
+    </div>
+);

@@ -3,7 +3,7 @@ import { Inter, Oswald, Playfair_Display } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
 import './globals.css';
 import { ClientProviders } from '@/components/providers/ClientProviders';
-import { metadata as siteMetadata, structuredData } from './metadata';
+import { metadata as siteMetadata, structuredData, portfolioSchema, creativeWorkSchema } from './metadata';
 
 // Configure fonts
 const inter = Inter({
@@ -43,7 +43,7 @@ export default function RootLayout({
         {/* Structured Data */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([structuredData, portfolioSchema, creativeWorkSchema]) }}
         />
       </head>
       <body className="antialiased bg-bg-void text-text-primary selection:bg-accent-primary selection:text-bg-void">

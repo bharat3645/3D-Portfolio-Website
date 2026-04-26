@@ -1,123 +1,223 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Quote, Star } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { TextReveal, WordReveal } from '@/components/ui/TextReveal';
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Sarah Chen",
-    role: "CTO @ TechFlow",
-    content: "Bharat's understanding of distributed systems is unparalleled. He didn't just build our infrastructure; he future-proofed it.",
-    rating: 5,
-    avatar: "SC"
-  },
-  {
-    id: 2,
-    name: "Marcus Rodriguez",
-    role: "Product Lead @ InnovateX",
-    content: "The 3D visualization work exceeded our expectations. It's rare to find an engineer who has such a strong grasp of both aesthetics and performance.",
-    rating: 5,
-    avatar: "MR"
-  },
-  {
-    id: 3,
-    name: "Dr. Emily Watson",
-    role: "Research Director @ AI Labs",
-    content: "His contribution to our ML pipeline optimization reduced training costs by 40%. A true problem solver.",
-    rating: 5,
-    avatar: "EW"
-  }
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+// ─── Real verified records ────────────────────────────────────────────────────
+const records = [
+    {
+        id: '01',
+        org: 'Perplexity AI',
+        role: 'Campus Student Partner',
+        year: '2025',
+        tag: 'AFFILIATION',
+        metric: null,
+        accent: '#E61E32',
+    },
+    {
+        id: '02',
+        org: 'Smart India Hackathon',
+        role: 'National Winner — AI/ML Track',
+        year: '2024',
+        tag: 'WINNER',
+        metric: '#1',
+        accent: '#E61E32',
+    },
+    {
+        id: '03',
+        org: 'PGDAV College · Univ. of Delhi',
+        role: 'Summer Research Intern — Deepfake Detection',
+        year: '2024',
+        tag: 'RESEARCH',
+        metric: '95%',
+        accent: '#06B6D4',
+    },
+    {
+        id: '04',
+        org: 'SCOPUS',
+        role: '5 Indexed Publications · 2 Book Chapters',
+        year: '2024–25',
+        tag: 'PUBLISHED',
+        metric: '5×',
+        accent: '#E61E32',
+    },
+    {
+        id: '05',
+        org: 'CSI Student Chapter · SIT Nagpur',
+        role: 'Chairperson — Led 15+ core members',
+        year: '2024–25',
+        tag: 'LEADERSHIP',
+        metric: null,
+        accent: '#06B6D4',
+    },
+    {
+        id: '06',
+        org: 'SITNovate 24H Hackathon',
+        role: 'Organizer — 100+ Participants',
+        year: 'Feb 2025',
+        tag: 'ORGANIZED',
+        metric: '100+',
+        accent: '#E61E32',
+    },
+    {
+        id: '07',
+        org: 'IEEE Student Chapter',
+        role: 'Core Member · AI/ML Workshops',
+        year: '2023–24',
+        tag: 'MEMBER',
+        metric: null,
+        accent: '#06B6D4',
+    },
+    {
+        id: '08',
+        org: 'GirlScript Summer of Code',
+        role: 'Open Source Contributor',
+        year: '2024',
+        tag: 'OSS',
+        metric: null,
+        accent: '#E61E32',
+    },
 ];
 
-export function TestimonialsSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
+// ─── Key proof numbers (real data) ───────────────────────────────────────────
+const proofNumbers = [
+    { value: '52',   label: 'GitHub Repositories',       sub: 'Pull Shark badge earned'          },
+    { value: '95%',  label: 'Deepfake Detection Acc.',   sub: 'CNN + MCDM · PGDAV Delhi'         },
+    { value: '91%',  label: 'Fraud Detection Accuracy',  sub: 'Federated Learning · FedML'       },
+    { value: '30%',  label: 'Traffic Wait Reduction',    sub: 'YOLO + AWS IoT · Smart City'      },
+];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+function RecordRow({ record, index }: { record: typeof records[0]; index: number }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const inView = useInView(ref, { once: true, margin: '-40px' });
 
-  return (
-    <section className="py-24 relative z-10 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    return (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+            ref={ref}
+            initial={{ opacity: 0, x: -20 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: index * 0.07, ease: EASE }}
+            className="record-row group"
+            data-cursor="hover"
         >
-          <h2 className="text-4xl md:text-5xl font-bold font-oswald text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-6">
-            ENDORSEMENTS
-          </h2>
-        </motion.div>
+            <span className="record-id font-mono text-[10px] text-white/20">[{record.id}]</span>
 
-        <div className="relative max-w-4xl mx-auto">
-          {/* Background Elements */}
-          <div className="absolute top-0 left-0 -translate-x-12 -translate-y-12 text-white/5">
-            <Quote size={120} />
-          </div>
-          <div className="absolute bottom-0 right-0 translate-x-12 translate-y-12 text-white/5 rotate-180">
-            <Quote size={120} />
-          </div>
+            <div className="record-body">
+                <span className="record-org font-mono text-[11px] tracking-widest text-white/70 group-hover:text-white transition-colors duration-300">
+                    {record.org}
+                </span>
+                <span className="record-role text-white/35 text-xs font-light">
+                    {record.role}
+                </span>
+            </div>
 
-          <div className="relative h-[300px] md:h-[250px]">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.id}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ 
-                  opacity: index === activeIndex ? 1 : 0,
-                  x: index === activeIndex ? 0 : index < activeIndex ? -100 : 100,
-                  pointerEvents: index === activeIndex ? 'auto' : 'none'
-                }}
-                transition={{ duration: 0.5 }}
-                className="absolute inset-0 flex flex-col items-center justify-center text-center"
-              >
-                <div className="flex gap-1 mb-6">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-accent-primary fill-accent-primary" />
-                  ))}
-                </div>
-                
-                <blockquote className="text-xl md:text-2xl text-white/90 font-light italic mb-8 max-w-2xl leading-relaxed">
-                  "{testimonial.content}"
-                </blockquote>
-
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12 border-2 border-accent-primary/20">
-                    <AvatarFallback className="bg-white/10 text-white">{testimonial.avatar}</AvatarFallback>
-                  </Avatar>
-                  <div className="text-left">
-                    <div className="font-bold text-white font-oswald tracking-wide">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Indicators */}
-          <div className="flex justify-center gap-3 mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveIndex(index)}
-                className={cn(
-                  "w-2 h-2 rounded-full transition-all duration-300",
-                  index === activeIndex ? "w-8 bg-accent-primary" : "bg-white/20 hover:bg-white/40"
+            <div className="record-right">
+                {record.metric && (
+                    <span className="record-metric font-display font-bold text-lg" style={{ color: record.accent }}>
+                        {record.metric}
+                    </span>
                 )}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+                <span
+                    className="record-tag font-mono text-[9px] tracking-[0.2em] px-2 py-0.5 border rounded-full"
+                    style={{ color: record.accent, borderColor: `${record.accent}30` }}
+                >
+                    {record.tag}
+                </span>
+                <span className="record-year font-mono text-[9px] text-white/20 hidden md:block">
+                    {record.year}
+                </span>
+            </div>
+        </motion.div>
+    );
+}
+
+export function TestimonialsSection() {
+    const numbersRef = useRef<HTMLDivElement>(null);
+    const numbersInView = useInView(numbersRef, { once: true, margin: '-80px' });
+
+    return (
+        <section className="py-24 px-6 relative z-10 overflow-hidden" id="testimonials">
+            <div className="max-w-5xl mx-auto">
+
+                {/* Heading */}
+                <div className="mb-16 text-center">
+                    <div style={{ overflow: 'hidden', display: 'inline-block' }} className="mb-5">
+                        <TextReveal>
+                            <p className="font-mono text-[10px] text-[#E61E32] tracking-[0.35em] uppercase">
+                                Proof of Work
+                            </p>
+                        </TextReveal>
+                    </div>
+                    <WordReveal
+                        text="Verified. Indexed. Real."
+                        className="justify-center"
+                        wordClass="font-display text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 tracking-tight pb-2"
+                        stagger={0.1}
+                        delay={0.1}
+                    />
+                    <div style={{ overflow: 'hidden' }} className="mt-5">
+                        <TextReveal delay={0.35}>
+                            <p className="text-neutral-500 text-sm font-mono tracking-wider max-w-xl mx-auto">
+                                Every entry below is a real affiliation, real win, or real publication — no placeholders.
+                            </p>
+                        </TextReveal>
+                    </div>
+                </div>
+
+                {/* Record log */}
+                <div className="record-log mb-20">
+                    <div className="record-log-header font-mono text-[9px] text-white/20 tracking-widest uppercase flex justify-between px-4 pb-3 border-b border-white/5">
+                        <span>ID · Organization</span>
+                        <span>Status · Year</span>
+                    </div>
+                    {records.map((r, i) => (
+                        <RecordRow key={r.id} record={r} index={i} />
+                    ))}
+                </div>
+
+                {/* Real proof numbers */}
+                <div ref={numbersRef} className="proof-numbers-grid">
+                    {proofNumbers.map((n, i) => (
+                        <motion.div
+                            key={n.label}
+                            initial={{ opacity: 0, y: 24 }}
+                            animate={numbersInView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ duration: 0.8, delay: i * 0.1, ease: EASE }}
+                            className="proof-number-card"
+                            data-cursor="hover"
+                        >
+                            <span className="proof-number-value">{n.value}</span>
+                            <span className="proof-number-label">{n.label}</span>
+                            <span className="proof-number-sub">{n.sub}</span>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* GitHub CTA */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.4 }}
+                    className="mt-16 text-center"
+                >
+                    <a
+                        href="https://github.com/bharat3645"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-cursor="cta"
+                        data-cursor-label="CODE"
+                        className="inline-flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors duration-300 group"
+                    >
+                        <span className="w-8 h-px bg-white/20 group-hover:bg-white/60 transition-colors duration-300" />
+                        52 repos · Pull Shark · github.com/bharat3645
+                        <span className="w-8 h-px bg-white/20 group-hover:bg-white/60 transition-colors duration-300" />
+                    </a>
+                </motion.div>
+            </div>
+        </section>
+    );
 }

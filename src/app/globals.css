@@ -5,6 +5,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800;900&display=swap');
+@import '../styles/masterpiece.css';
 
 @tailwind base;
 @tailwind components;
@@ -105,11 +106,10 @@ body {
   line-height: 1.6;
   font-size: 0.9375rem;
   overflow-x: hidden;
-  cursor: crosshair;
+  cursor: none;
   position: relative;
   width: 100%;
   min-height: 100vh;
-  /* Removed scroll-behavior - Lenis handles this */
 }
 
 /* ===================================
