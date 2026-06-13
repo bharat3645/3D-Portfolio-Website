@@ -71,13 +71,12 @@ export function HeroSection() {
                 aria-hidden="true"
             />
 
-            {/* ─── SPLINE — right-side decorative bg ─── */}
+            {/* ─── SPLINE — right-side robot, vertically centered ─── */}
             <div
-                className="absolute right-[-30%] sm:right-[-18%] md:right-[-8%] top-0 h-full w-[95%] sm:w-[78%] md:w-[65%] z-[1] mix-blend-screen pointer-events-none"
+                className="absolute right-[-12%] sm:right-[-4%] md:right-[2%] top-1/2 -translate-y-1/2 h-[70%] sm:h-[78%] w-[88%] sm:w-[60%] md:w-[50%] z-[1] mix-blend-screen pointer-events-none"
                 style={{
-                    opacity: splineReady ? 0.58 : 0,
+                    opacity: splineReady ? 0.72 : 0,
                     transition: 'opacity 1.6s cubic-bezier(0.16,1,0.3,1)',
-                    willChange: 'opacity',
                 }}
                 aria-hidden="true"
             >
@@ -161,23 +160,29 @@ export function HeroSection() {
                     </div>
                 </div>
 
-                {/* ── TITLE — fills viewport width ── */}
+                {/* ── TITLE — wordmark sized to fit one line (no clip) ── */}
                 <div className="flex-1 flex flex-col justify-center">
                     <DecodeText
                         text="404GHOST"
                         delay={0.25}
-                        className="font-display font-black text-[clamp(4.5rem,19.5vw,22rem)] leading-[0.85] tracking-[-0.04em] text-white select-none"
+                        className="font-display font-black text-[clamp(3rem,13vw,15rem)] leading-[0.82] tracking-[-0.035em] text-white select-none whitespace-nowrap"
                     />
 
-                    {/* Sweep rule */}
+                    {/* Role line + animated rule — gives the wordmark immediate context */}
                     <motion.div
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ duration: 1.6, delay: 1.0, ease: EASE }}
-                        className="w-full mt-6 md:mt-8"
-                        style={{ height: '1px', background: 'rgba(255,255,255,0.08)', transformOrigin: 'left center' }}
-                        aria-hidden="true"
-                    />
+                        initial={{ opacity: 0, y: 14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.9, delay: 0.95, ease: EASE }}
+                        className="mt-7 md:mt-9 flex items-center gap-4 md:gap-6 flex-wrap"
+                    >
+                        <span className="font-mono text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white/75 whitespace-nowrap">
+                            AI Systems Engineer
+                        </span>
+                        <span className="hidden sm:block h-px w-10 md:w-16 bg-gradient-to-r from-[#E61E32]/60 to-transparent flex-shrink-0" />
+                        <span className="font-mono text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white/35">
+                            GenAI · Distributed Systems · Full-Stack
+                        </span>
+                    </motion.div>
                 </div>
 
                 {/* ── FOOTER ROW ── */}
@@ -187,17 +192,11 @@ export function HeroSection() {
                     transition={{ duration: 0.9, delay: 1.25, ease: EASE }}
                     className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 pb-14 md:pb-16"
                 >
-                    {/* Left — role + tagline */}
-                    <div className="max-w-[22rem]">
-                        <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-white/55 mb-3">
-                            AI Systems Engineer
-                            <span className="text-[#E61E32]/60 mx-3">·</span>
-                            GenAI
-                            <span className="text-white/15 mx-3">·</span>
-                            Full-Stack
-                        </p>
-                        <p className="text-[0.9rem] font-light leading-[1.7]" style={{ color: 'rgba(255,255,255,0.38)' }}>
-                            Architecting intelligent systems<br className="hidden sm:block" /> that endure in production.
+                    {/* Left — tagline */}
+                    <div className="max-w-[26rem]">
+                        <p className="text-[0.95rem] font-light leading-[1.75]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                            Architecting intelligent systems that endure in production —
+                            <span className="text-white/80"> from GenAI pipelines to distributed backends.</span>
                         </p>
                     </div>
 

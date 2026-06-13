@@ -7,7 +7,7 @@ import { portfolioData } from '@/data/portfolioData';
    Everything below — metadata, canonical, OG, sitemap, robots, JSON-LD — reads
    from `siteUrl`, so there is exactly one place to change.
    ========================================================================== */
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://404ghost.dev').replace(/\/$/, '');
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://bharat3645.vercel.app').replace(/\/$/, '');
 
 const fullName = 'Bharat Singh Parihar';
 const brand = '404ghost';
@@ -29,9 +29,9 @@ const headshot = `${siteUrl}/Photo.jpeg`;
 const sameAs = [
     portfolioData.personal.github,    // https://github.com/bharat3645
     portfolioData.personal.linkedin,  // https://www.linkedin.com/in/bharat-singh-parihar/
-    // 'https://scholar.google.com/citations?user=XXXXXXXX',  // <- paste Google Scholar
-    // 'https://www.instagram.com/XXXXXXXX',                  // <- paste Instagram
-    // 'https://medium.com/@XXXXXXXX',                        // <- paste Medium / dev.to
+    'https://scholar.google.com/citations?user=UMDUEPgAAAAJ&hl=en',
+    'https://www.instagram.com/bh.arat_parihar/',
+    'https://medium.com/@bharat3645',
 ].filter(Boolean);
 
 /* ============================================================================
