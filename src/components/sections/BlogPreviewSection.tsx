@@ -1,10 +1,11 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { blogPosts } from '@/data/blog-posts';
+import { setSpotlightActive } from '@/core/MotionProvider';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -16,12 +17,22 @@ const CATEGORY_COLORS: Record<string, string> = {
     'Engineering':         '#06B6D4',
 };
 
+const INITIAL_COUNT = 3;
+
 export function BlogPreviewSection() {
     const headingRef = useRef<HTMLDivElement>(null);
     const inView = useInView(headingRef, { once: true, margin: '-80px' });
+    const [showAll, setShowAll] = useState(false);
+    const visiblePosts = showAll ? blogPosts : blogPosts.slice(0, INITIAL_COUNT);
+    const remaining = blogPosts.length - INITIAL_COUNT;
 
     return (
-        <section className="relative z-10 overflow-hidden section-spotlight" id="blog">
+        <section
+            className="relative z-10 overflow-hidden section-spotlight"
+            id="blog"
+            onMouseEnter={() => setSpotlightActive(true)}
+            onMouseLeave={() => setSpotlightActive(false)}
+        >
             {/* Decorative bg text */}
             <div className="section-bg-text" aria-hidden="true">
                 <span
@@ -80,10 +91,30 @@ export function BlogPreviewSection() {
 
                 {/* Cinematic 1px-gap grid */}
                 <div className="blog-cinematic-grid">
-                    {blogPosts.map((post, i) => (
-                        <BlogCard key={post.slug} post={post} index={i} />
-                    ))}
+                    <AnimatePresence initial={false}>
+                        {visiblePosts.map((post, i) => (
+                            <BlogCard key={post.slug} post={post} index={i} />
+                        ))}
+                    </AnimatePresence>
                 </div>
+
+                {/* Load more */}
+                {!showAll && remaining > 0 && (
+                    <div className="flex justify-center pt-12 pb-8 px-6">
+                        <motion.button
+                            onClick={() => setShowAll(true)}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.4 }}
+                            className="group flex items-center gap-4 font-mono text-[10px] tracking-[0.3em] uppercase text-white/30 hover:text-white/70 transition-colors duration-300"
+                            data-cursor="hover"
+                        >
+                            <span className="w-8 h-px bg-white/15 group-hover:w-14 group-hover:bg-white/40 transition-all duration-500" />
+                            Load More Logs ({remaining})
+                            <span className="w-8 h-px bg-white/15 group-hover:w-14 group-hover:bg-white/40 transition-all duration-500" />
+                        </motion.button>
+                    </div>
+                )}
             </div>
         </section>
     );

@@ -1,19 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useMotion } from '@/hooks/useMotion';
 import Image from 'next/image';
 
 export function IdentitySection() {
-    // Safe fallback for useMotion
-    let state = { isIdle: false };
-    try {
-        const motionContext = useMotion();
-        state = motionContext.state;
-    } catch (error) {
-        // MotionProvider not available, use default state
-    }
-
     return (
         <section className="min-h-[80vh] py-24 px-6 md:px-12 relative flex items-center">
 
@@ -21,6 +11,14 @@ export function IdentitySection() {
 
                 {/* Column 1: Philosophy Text (Left) */}
                 <div className="order-2 md:order-1 relative z-10">
+
+                    {/* Name-anchored eyebrow — gives answer engines a clean, crawlable
+                        "X is a ..." entity statement, and reads as professional. */}
+                    <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-accent-primary mb-5">
+                        Bharat Singh Parihar
+                        <span className="text-white/25 mx-2">—</span>
+                        <span className="text-white/50">AI Systems Engineer</span>
+                    </p>
 
                     {/* Subtle Fade for Headline */}
                     <motion.h2
@@ -84,7 +82,7 @@ export function IdentitySection() {
             {/* Ambient Label */}
             <div className="absolute left-6 bottom-12 hidden md:block">
                 <span className="font-mono text-[9px] text-neutral-600 tracking-widest uppercase">
-                    Identity.sys :: {state.isIdle ? 'OBSERVING' : 'ACTIVE'}
+                    Based in India · Available Worldwide
                 </span>
             </div>
 

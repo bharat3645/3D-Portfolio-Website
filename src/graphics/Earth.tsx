@@ -1,9 +1,10 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Preload, useGLTF } from '@react-three/drei';
+import { OrbitControls, Preload, useGLTF, PerformanceMonitor } from '@react-three/drei';
 import CanvasLoader from './Loader';
+import { detectQuality } from '@/hooks/useQuality';
 
 const Earth = () => {
     const earth = useGLTF('/planet/scene.gltf');
@@ -19,12 +20,17 @@ const Earth = () => {
 };
 
 export const EarthCanvas = () => {
+    // DPR ceiling by device tier; PerformanceMonitor adapts live within that range.
+    const q = detectQuality();
+    const ceiling = q === 'high' ? 2 : q === 'med' ? 1.5 : 1;
+    const [dpr, setDpr] = useState(ceiling);
+
     return (
         <Canvas
             shadows={false}
             frameloop="demand"
-            dpr={[1, 2]}
-            gl={{ powerPreference: "high-performance", antialias: false, stencil: false, depth: false }}
+            dpr={dpr}
+            gl={{ powerPreference: "high-performance", antialias: false, stencil: false, depth: true }}
             camera={{
                 fov: 45,
                 near: 0.1,
@@ -32,6 +38,11 @@ export const EarthCanvas = () => {
                 position: [-4, 3, 6],
             }}
         >
+            {/* Step DPR down when frames lag, back up (capped at tier ceiling) when stable. */}
+            <PerformanceMonitor
+                onDecline={() => setDpr((d) => Math.max(1, Math.round((d - 0.5) * 10) / 10))}
+                onIncline={() => setDpr((d) => Math.min(ceiling, Math.round((d + 0.5) * 10) / 10))}
+            />
             <Suspense fallback={<CanvasLoader />}>
                 <OrbitControls
                     autoRotate

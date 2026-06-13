@@ -10,6 +10,7 @@ import { Vignette } from '@/components/graphics/Vignette';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CustomCursor } from '@/components/systems/CustomCursor';
 import { DotNav } from '@/components/systems/DotNav';
+import { homeOnlyJsonLd } from '@/app/metadata';
 
 // Lazy-loaded sections
 const CurrentRoleSection  = lazy(() => import('@/components/sections/CurrentRoleSection').then(m => ({ default: m.CurrentRoleSection })));
@@ -22,7 +23,6 @@ const TechSection         = lazy(() => import('@/components/sections/TechSection
 const BlogPreviewSection  = lazy(() => import('@/components/sections/BlogPreviewSection').then(m => ({ default: m.BlogPreviewSection })));
 // TestimonialsSection removed — replaced by extra blog logs
 const CredibilitySection  = lazy(() => import('@/components/sections/CredibilitySection').then(m => ({ default: m.CredibilitySection })));
-const ContactSection      = lazy(() => import('@/components/sections/Contact').then(m => ({ default: m.ContactSection })));
 const FinalCTA            = lazy(() => import('@/components/sections/FinalCTA').then(m => ({ default: m.FinalCTA })));
 
 const Fallback = memo(() => (
@@ -47,6 +47,11 @@ export default function Home() {
 
     return (
         <ErrorBoundary>
+            {/* Homepage-only structured data — ProfilePage + FAQ + projects */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(homeOnlyJsonLd) }}
+            />
             <CustomCursor />
             {!isLoading && <DotNav />}
 
@@ -64,7 +69,7 @@ export default function Home() {
                     className="relative z-10"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isLoading ? 0 : 1 }}
-                    transition={{ duration: 1.5, ease: 'easeOut' }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <HeroSection />
 
@@ -79,7 +84,6 @@ export default function Home() {
                             <Wrap><CredibilitySection /></Wrap>
                             <Wrap><TechSection /></Wrap>
                             <Wrap><BlogPreviewSection /></Wrap>
-                            <Wrap><ContactSection /></Wrap>
                             <Wrap><FinalCTA /></Wrap>
                         </>
                     )}

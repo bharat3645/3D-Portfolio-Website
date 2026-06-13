@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 
 const SECTIONS = [
-    { id: 'hero',         label: 'Home'         },
-    { id: 'work',         label: 'Work'         },
-    { id: 'about',        label: 'About'        },
-    { id: 'tech',         label: 'Tech'         },
-    { id: 'testimonials', label: 'Testimonials' },
-    { id: 'contact',      label: 'Contact'      },
+    { id: 'hero',    label: 'Home'    },
+    { id: 'work',    label: 'Work'    },
+    { id: 'about',   label: 'About'   },
+    { id: 'tech',    label: 'Tech'    },
+    { id: 'blog',    label: 'Logs'    },
+    { id: 'contact', label: 'Contact' },
 ];
 
 export function DotNav() {
@@ -17,21 +17,40 @@ export function DotNav() {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setVisible(window.scrollY > 100);
+        const els = SECTIONS
+            .map((s) => document.getElementById(s.id))
+            .filter((el): el is HTMLElement => !!el);
 
-            for (const s of [...SECTIONS].reverse()) {
-                const el = document.getElementById(s.id);
-                if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
-                    setActive(s.id);
-                    break;
-                }
-            }
+        // Active section: fires only when a section crosses the viewport mid-line.
+        // Replaces an unthrottled scroll handler that did getBoundingClientRect()
+        // on every section on every scroll tick (forced layout under Lenis).
+        const io = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((e) => {
+                    if (e.isIntersecting) setActive(e.target.id);
+                });
+            },
+            { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+        );
+        els.forEach((el) => io.observe(el));
+
+        // Visibility toggle, rAF-throttled (one read per frame max)
+        let ticking = false;
+        const onScroll = () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                setVisible(window.scrollY > 100);
+                ticking = false;
+            });
         };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            io.disconnect();
+            window.removeEventListener('scroll', onScroll);
+        };
     }, []);
 
     const scrollTo = (id: string) => {

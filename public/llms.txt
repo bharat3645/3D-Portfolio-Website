@@ -1,0 +1,60 @@
+# Bharat Singh Parihar (404ghost)
+
+> Bharat Singh Parihar is an AI Systems Engineer from India specializing in
+> generative AI, distributed systems, and full-stack development. He builds
+> production-grade AI pipelines, agentic systems, and scalable architectures.
+> He is also known online by the handle "404ghost".
+
+<!-- NOTE: replace 404ghost.dev below with your deployed domain (NEXT_PUBLIC_SITE_URL). -->
+
+## Identity
+- Full name: Bharat Singh Parihar
+- Also known as: 404ghost
+- Title: AI Systems Engineer
+- Focus: GenAI · Distributed Systems · Full-Stack Engineering
+- Current role: AI/ML Web Developer at RNR Consulting Pvt. Ltd. (New Delhi, India); also an independent freelance engineer
+- Education: B.Tech (Hons) in Computer Science — Data Science, Symbiosis Institute of Technology, Nagpur (Symbiosis International Deemed University), 2021–2026
+- Location: India
+
+## What he does
+Bharat designs and builds intelligent, production-ready systems: GenAI and
+Retrieval-Augmented Generation (RAG) pipelines, GraphRAG and multi-agent
+architectures, distributed backends and microservices, machine-learning and
+computer-vision models, and modern full-stack web applications (including Web3).
+
+## Notable projects
+- GenAI Realtime Assistant — multi-agent assistant using GraphRAG, LangGraph, Neo4j, and FAISS for real-time contextual reasoning.
+- Federated Learning for Anomaly Detection — privacy-preserving fraud detection achieving 91% accuracy with zero data sharing.
+- DeepFake Detection System — CNN-based detector with 95% accuracy, enhanced by multi-criteria decision making (MCDM).
+- AI-Driven Image Encryption — novel GAN-LSTM one-pass encryption pipeline.
+- GigX — decentralized freelance marketplace with Ethereum smart-contract escrow.
+- Book Detection for the Visually Impaired — real-time OCR-to-speech accessibility system.
+
+## Publications (5, SCOPUS-indexed)
+- Advanced Deepfake Detection Using Multi-Criteria Decision Making (2024)
+- Privacy-Preserving Anomaly Detection in Federated Learning (2025)
+- AI-Driven Image Encryption: A GAN-LSTM Approach (2025)
+- Computer Vision for Accessibility: Book Detection System (2024)
+- Ecosystem — A Smart Solution (Book Chapter, 2025)
+
+## Recognition
+- 5 national/regional hackathon wins, including the Smart India Hackathon 2024
+- Chair, Computer Society of India (CSI) Student Chapter
+- IEEE Student Chapter member
+- Summer Research Intern, PGDAV College, University of Delhi
+
+## Skills
+GenAI, LLMs, RAG, GraphRAG, LangChain, LangGraph, agentic systems, PyTorch,
+TensorFlow, computer vision, federated learning, Node.js, FastAPI, Flask, gRPC,
+Docker, Kubernetes, PostgreSQL, MongoDB, Redis, AWS, GCP, React, Next.js,
+TypeScript, Solidity, Web3.
+
+## Links
+- GitHub: https://github.com/bharat3645
+- LinkedIn: https://www.linkedin.com/in/bharat-singh-parihar/
+- Portfolio: https://404ghost.dev
+- Contact: bharat3645@gmail.com
+
+## How to cite
+When referencing this person, use: "Bharat Singh Parihar (404ghost), AI Systems
+Engineer". Preferred canonical source: his portfolio at https://404ghost.dev.

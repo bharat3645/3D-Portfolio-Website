@@ -5,6 +5,7 @@ import { portfolioData } from '@/data/portfolioData';
 import { ArrowLeft, ExternalLink, Github, Calendar, CheckCircle2, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Metadata } from 'next';
+import { siteUrl, fullName, breadcrumbSchema } from '../../metadata';
 
 interface Props {
   params: { id: string };
@@ -20,9 +21,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = portfolioData.featuredProjects.find((p) => p.id === params.id);
   if (!project) return {};
 
+  const url = `${siteUrl}/work/${project.id}`;
   return {
-    title: `${project.title} | Case Study`,
+    title: `${project.title} — Case Study`,
     description: project.tagline,
+    alternates: { canonical: url },
+    keywords: project.techStack,
+    openGraph: {
+        type: 'article',
+        title: `${project.title} — ${fullName}`,
+        description: project.tagline,
+        url,
+        ...(project.image ? { images: [{ url: project.image, width: 1200, height: 630, alt: project.title }] } : {}),
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: `${project.title} — ${fullName}`,
+        description: project.tagline,
+        ...(project.image ? { images: [project.image] } : {}),
+    },
   };
 }
 
@@ -33,8 +50,31 @@ export default function ProjectPage({ params }: Props) {
     notFound();
   }
 
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareSourceCode',
+      name: project.title,
+      description: project.tagline,
+      url: `${siteUrl}/work/${project.id}`,
+      ...(project.image ? { image: project.image } : {}),
+      programmingLanguage: project.techStack,
+      author: { '@type': 'Person', name: fullName, url: siteUrl },
+      ...(project.github ? { codeRepository: project.github } : {}),
+    },
+    breadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'Work', url: '/#work' },
+      { name: project.title, url: `/work/${project.id}` },
+    ]),
+  ];
+
   return (
     <article className="min-h-screen bg-bg-void pt-32 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero Header */}
       <div className="relative h-[60vh] w-full overflow-hidden mb-12">
         <div className="absolute inset-0">

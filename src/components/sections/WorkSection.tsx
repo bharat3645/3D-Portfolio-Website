@@ -104,6 +104,8 @@ function ProjectCard({
         });
     };
 
+    const wcTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     const onMouseLeave = () => {
         cancelAnimationFrame(rafRef.current);
         setHovered(false);
@@ -112,6 +114,11 @@ function ProjectCard({
                 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
             innerRef.current.style.transition =
                 'transform 0.6s cubic-bezier(0.25,1,0.5,1)';
+            // Release the GPU layer once the tilt-settle transition is done
+            if (wcTimer.current) clearTimeout(wcTimer.current);
+            wcTimer.current = setTimeout(() => {
+                if (innerRef.current) innerRef.current.style.willChange = 'auto';
+            }, 650);
         }
         if (shineRef.current) shineRef.current.style.background = 'none';
     };
@@ -119,6 +126,9 @@ function ProjectCard({
     const onMouseEnter = () => {
         setHovered(true);
         if (innerRef.current) {
+            if (wcTimer.current) clearTimeout(wcTimer.current);
+            // Promote just-in-time — only the card being tilted gets a layer
+            innerRef.current.style.willChange = 'transform';
             innerRef.current.style.transition = 'transform 0.15s ease-out';
         }
     };

@@ -1,14 +1,23 @@
 import type { Metadata } from 'next';
-import { Inter, Oswald, Playfair_Display } from 'next/font/google';
+import { Inter, Inter_Tight, Oswald, Playfair_Display } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
 import './globals.css';
 import { ClientProviders } from '@/components/providers/ClientProviders';
-import { metadata as siteMetadata, structuredData, portfolioSchema, creativeWorkSchema } from './metadata';
+import { metadata as siteMetadata, globalJsonLd } from './metadata';
 
 // Configure fonts
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+// Display font for headings (Tailwind `font-display`). Self-hosted via next/font
+// to kill the render-blocking Google Fonts @import that was in globals.css.
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  variable: '--font-inter-tight',
+  weight: ['600', '700', '800', '900'],
   display: 'swap',
 });
 
@@ -37,13 +46,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${oswald.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${inter.variable} ${interTight.variable} ${oswald.variable} ${playfair.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-        {/* Structured Data */}
+        {/* Persistent entity graph — Person + WebSite (every page) */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify([structuredData, portfolioSchema, creativeWorkSchema]) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(globalJsonLd) }}
         />
       </head>
       <body className="antialiased bg-bg-void text-text-primary selection:bg-accent-primary selection:text-bg-void">

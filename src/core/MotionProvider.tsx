@@ -18,11 +18,19 @@ interface MotionState {
 interface MotionContextType {
     state: MotionState;
     lenis: Lenis | null;
+    /** Subscribe to the single shared rAF tick. Returns an unsubscribe fn. */
+    subscribe: (fn: (time: number) => void) => () => void;
 }
 
 export const MotionContext = createContext<MotionContextType | null>(null);
 
 // useMotion has been moved to @/hooks/useMotion
+
+// Module-level flag: only write --mouse-x/--mouse-y to <body> while a
+// .section-spotlight section is actually hovered. Otherwise the ~30/sec writes
+// invalidate the body subtree for a gradient that's opacity:0 (paint-skipped).
+let spotlightActive = false;
+export const setSpotlightActive = (v: boolean) => { spotlightActive = v; };
 
 interface MotionProviderProps {
     children: React.ReactNode;
@@ -45,6 +53,14 @@ export function MotionProvider({ children }: MotionProviderProps) {
     const stateRef = useRef(state); // Ref to access latest state in loops without deps
     const lastMouseTime = useRef(0);
     const idleTimer = useRef<NodeJS.Timeout | null>(null);
+
+    // Single shared rAF tick-bus — other systems (Stars, etc.) subscribe here
+    // instead of spinning their own requestAnimationFrame loops.
+    const tickSubs = useRef<Set<(time: number) => void>>(new Set());
+    const subscribe = useRef((fn: (time: number) => void) => {
+        tickSubs.current.add(fn);
+        return () => { tickSubs.current.delete(fn); };
+    }).current;
 
     // Update ref when state changes (only for consumption, not for the loop itself mainly)
     /* Actually, to avoid re-renders on every frame, we might NOT want to setState on every frame.
@@ -115,29 +131,38 @@ export function MotionProvider({ children }: MotionProviderProps) {
 
         window.addEventListener('mousemove', handleMouseMove);
 
-        // RAF LOOP
+        // RAF LOOP — store ID so we can cancel on cleanup
+        let rafId = 0;
+        let cssFrame = 0;
+
         function raf(time: number) {
             lenis.raf(time);
 
             motionValues.current.time = time;
             motionValues.current.scrollY = window.scrollY;
-
-            // Properly type Lenis velocity (Lenis exposes velocity but TypeScript def may not include it)
             motionValues.current.scrollVelocity = (lenis as any).velocity || 0;
             motionValues.current.scrollProgress = lenis.progress || 0;
 
-            // Update CSS Variables for easy access in CSS
-            document.body.style.setProperty('--scroll-y', `${motionValues.current.scrollY}`);
-            document.body.style.setProperty('--scroll-velocity', `${motionValues.current.scrollVelocity}`);
-            document.body.style.setProperty('--mouse-x', `${motionValues.current.mouseX}px`);
-            document.body.style.setProperty('--mouse-y', `${motionValues.current.mouseY}px`);
+            // Only write CSS vars every 2nd frame — halves DOM mutation cost.
+            // --scroll-y / --scroll-velocity removed: no mounted CSS consumer
+            // (scrollVelocity is still read from motionValues.current by the Stars warp).
+            // --mouse-x/y only while a spotlight section is hovered.
+            cssFrame++;
+            if (cssFrame % 2 === 0 && spotlightActive) {
+                document.body.style.setProperty('--mouse-x', `${motionValues.current.mouseX}px`);
+                document.body.style.setProperty('--mouse-y', `${motionValues.current.mouseY}px`);
+            }
 
-            requestAnimationFrame(raf);
+            // Drive all subscribers from this one loop.
+            tickSubs.current.forEach((fn) => fn(time));
+
+            rafId = requestAnimationFrame(raf);
         }
 
-        requestAnimationFrame(raf);
+        rafId = requestAnimationFrame(raf);
 
         return () => {
+            cancelAnimationFrame(rafId);
             lenis.destroy();
             window.removeEventListener('mousemove', handleMouseMove);
             if (idleTimer.current) clearTimeout(idleTimer.current);
@@ -147,7 +172,8 @@ export function MotionProvider({ children }: MotionProviderProps) {
     return (
         <MotionContext.Provider value={{
             state: motionValues.current, // Initial, careful using this in render
-            lenis: lenisRef.current
+            lenis: lenisRef.current,
+            subscribe,
         }}>
             {children}
         </MotionContext.Provider>

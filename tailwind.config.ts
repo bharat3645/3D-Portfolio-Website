@@ -47,8 +47,8 @@ export default {
 				},
 			},
 			fontFamily: {
-				display: ['Inter Tight', 'sans-serif'],
-				body: ['Inter', 'sans-serif'],
+				display: ['var(--font-inter-tight)', 'Inter Tight', 'sans-serif'],
+				body: ['var(--font-inter)', 'Inter', 'sans-serif'],
 			},
 			spacing: {
 				'xs': '0.5rem',

@@ -3,8 +3,8 @@
    Cinematic • Premium • Engineered
    =================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800;900&display=swap');
+/* Inter + Inter Tight are now self-hosted via next/font (see layout.tsx) —
+   removed the render-blocking Google Fonts @imports that duplicated them. */
 @import '../styles/masterpiece.css';
 
 @tailwind base;
@@ -49,10 +49,12 @@
   --text-secondary: #A3A3A3;
   --text-muted: #525252;
 
-  /* Typography System - Elegant & Sophisticated */
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
-  --font-accent: 'Oswald', sans-serif;
+  /* Typography System — all self-hosted via next/font (layout.tsx).
+     CSS --font-display (Playfair) is a distinct layer from Tailwind font-display
+     (Inter Tight) — intentional two-layer system, do not reconcile. */
+  --font-display: var(--font-playfair), 'Playfair Display', serif;
+  --font-body: var(--font-inter), 'Inter', sans-serif;
+  --font-accent: var(--font-oswald), 'Oswald', sans-serif;
 
   /* Spacing — Cinematic / Vast */
   --space-xs: 0.5rem;
@@ -212,37 +214,9 @@ p {
    PREMIUM CARD SYSTEM
    =================================== */
 
-.card-ghost {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: var(--space-2xl);
-  transition: all var(--motion-hover);
-  position: relative;
-  overflow: hidden;
-}
-
-.card-ghost::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      var(--accent-glow),
-      transparent 50%);
-  opacity: 0;
-  transition: opacity var(--motion-hover);
-  pointer-events: none;
-}
-
-.card-ghost:hover {
-  border-color: var(--border-medium);
-  transform: translateY(-4px);
-  box-shadow: var(--depth-card);
-}
-
-.card-ghost:hover::before {
-  opacity: 1;
-}
+/* Removed dead .card-ghost rules (no .tsx usage). The ::before read --mouse-x/y
+   into a radial-gradient — a latent page-wide paint dependency on the body mouse
+   vars, now also gated at the source (MotionProvider). */
 
 .card-dominant {
   background-color: var(--bg-elevated);
@@ -595,7 +569,9 @@ p {
 /* Base section styling for smooth transitions */
 section {
   position: relative;
-  will-change: transform, opacity;
+  /* No permanent will-change — promote layers just-in-time in JS instead.
+     Standing promotion on every section held resident GPU memory and starved
+     the live WebGL contexts (Spline hero, R3F Earth, Stars). */
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -616,15 +592,6 @@ section {
 section+section {
   margin-top: 0;
   padding-top: clamp(4rem, 8vh, 8rem);
-}
-
-/* Prevent layout shifts during transitions */
-section::before {
-  content: '';
-  display: block;
-  height: 0;
-  width: 0;
-  margin-top: 0;
 }
 
 /* ===================================

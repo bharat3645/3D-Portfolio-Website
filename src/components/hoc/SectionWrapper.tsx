@@ -14,7 +14,7 @@ export const SectionWrapper = (Component: React.ComponentType, idName: string) =
                 variants={staggerContainer()}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: false, amount: 0.1 }}
+                viewport={{ once: true, amount: 0.1 }}
                 className="max-w-7xl mx-auto relative z-0 px-4 sm:px-6 lg:px-8"
                 style={{
                     background: 'transparent',
@@ -26,28 +26,25 @@ export const SectionWrapper = (Component: React.ComponentType, idName: string) =
                     &nbsp;
                 </span>
 
-                {/* Advanced professional transition with scale and blur */}
+                {/* Compositor-only reveal — opacity + transform + scale (no blur, no paint thrash) */}
                 <motion.div
                     initial={{
                         opacity: 0,
                         y: 50,
-                        scale: 0.95,
-                        filter: "blur(10px)"
+                        scale: 0.95
                     }}
                     whileInView={{
                         opacity: 1,
                         y: 0,
-                        scale: 1,
-                        filter: "blur(0px)"
+                        scale: 1
                     }}
-                    viewport={{ once: false, amount: 0.1 }}
+                    viewport={{ once: true, amount: 0.1 }}
                     transition={{
                         duration: 1,
                         ease: [0.16, 1, 0.3, 1], // Professional easing curve
                         opacity: { duration: 0.8 },
                         y: { duration: 1, ease: [0.22, 1, 0.36, 1] },
-                        scale: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
-                        filter: { duration: 0.8 }
+                        scale: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
                     }}
                     className="py-8 sm:py-10 md:py-12 lg:py-16"
                 >

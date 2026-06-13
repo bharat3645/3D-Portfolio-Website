@@ -1,18 +1,33 @@
 import { MetadataRoute } from 'next';
 import { blogPosts } from '@/data/blog-posts';
+import { portfolioData } from '@/data/portfolioData';
+import { siteUrl } from './metadata';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://404ghost.dev';
+    const lastBuild = new Date();
 
-  const posts = blogPosts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
-  }));
+    const staticRoutes: MetadataRoute.Sitemap = [
+        { url: `${siteUrl}/`, lastModified: lastBuild, changeFrequency: 'weekly', priority: 1.0 },
+        { url: `${siteUrl}/blog`, lastModified: lastBuild, changeFrequency: 'weekly', priority: 0.7 },
+    ];
 
-  const routes = ['', '/blog'].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-  }));
+    const posts: MetadataRoute.Sitemap = blogPosts.map((post) => {
+        const d = new Date(post.date);
+        return {
+            url: `${siteUrl}/blog/${post.slug}`,
+            // Stable per-post date (not rebuild time) → cleaner crawl signals.
+            lastModified: isNaN(d.getTime()) ? lastBuild : d,
+            changeFrequency: 'monthly',
+            priority: 0.6,
+        };
+    });
 
-  return [...routes, ...posts];
+    const works: MetadataRoute.Sitemap = portfolioData.featuredProjects.map((p) => ({
+        url: `${siteUrl}/work/${p.id}`,
+        lastModified: lastBuild,
+        changeFrequency: 'monthly',
+        priority: 0.8,
+    }));
+
+    return [...staticRoutes, ...posts, ...works];
 }

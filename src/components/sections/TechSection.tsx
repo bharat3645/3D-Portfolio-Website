@@ -35,10 +35,10 @@ const row2 = [
     { name: 'Nginx',       icon: '/tech/nginx.webp'     },
 ];
 
-function MarqueeRow({ items, reverse = false }: { items: typeof row1; reverse?: boolean }) {
+function MarqueeRow({ items, reverse = false, paused = false }: { items: typeof row1; reverse?: boolean; paused?: boolean }) {
     const doubled = [...items, ...items];
     return (
-        <div className={`marquee-track ${reverse ? 'marquee-track--reverse' : ''}`}>
+        <div className={`marquee-track ${reverse ? 'marquee-track--reverse' : ''} ${paused ? 'marquee-paused' : ''}`}>
             <div className="marquee-content">
                 {doubled.map((tech, i) => (
                     <div key={`${tech.name}-${i}`} className="marquee-item" data-cursor="hover">
@@ -48,7 +48,7 @@ function MarqueeRow({ items, reverse = false }: { items: typeof row1; reverse?: 
                                 alt={tech.name}
                                 width={28}
                                 height={28}
-                                className="object-contain"
+                                className={`object-contain${tech.name === 'Three.js' ? ' invert' : ''}`}
                             />
                         </div>
                         <span className="marquee-item-name">{tech.name}</span>
@@ -61,7 +61,9 @@ function MarqueeRow({ items, reverse = false }: { items: typeof row1; reverse?: 
 
 export function TechSection() {
     const ref = useRef<HTMLElement>(null);
-    const inView = useInView(ref, { once: true, margin: '-100px' });
+    // once:false so the marquee re-pauses whenever the section scrolls out of view.
+    const inView = useInView(ref, { once: false, margin: '-100px' });
+    const paused = !inView;
 
     return (
         <section ref={ref} id="tech" className="py-24 overflow-hidden relative z-10">
@@ -70,8 +72,8 @@ export function TechSection() {
             </div>
 
             <div className="marquee-container">
-                <MarqueeRow items={row1} />
-                <MarqueeRow items={row2} reverse />
+                <MarqueeRow items={row1} paused={paused} />
+                <MarqueeRow items={row2} reverse paused={paused} />
             </div>
 
             {/* Fade edges */}

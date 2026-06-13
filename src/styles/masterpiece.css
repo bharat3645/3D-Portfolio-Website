@@ -139,12 +139,12 @@
   height: 100%;
   pointer-events: none;
   z-index: 9990;
-  opacity: 0.022;
+  opacity: 0.028;
   background-image: url('/noise.svg');
   background-repeat: repeat;
   background-size: 180px 180px;
-  mix-blend-mode: overlay;
-  /* Static — no animation, saves CPU */
+  /* No mix-blend-mode: overlay — it forced a per-frame GPU backdrop readback over
+     the moving Spline/Earth/Stars pixels. Plain alpha is visually near-identical. */
 }
 
 /* ===================================
@@ -180,6 +180,12 @@
 
 .marquee-track:hover .marquee-content {
   animation-play-state: paused;
+}
+
+/* Off-screen: pause animation AND release the GPU layer (set by JS via inView) */
+.marquee-paused .marquee-content {
+  animation-play-state: paused;
+  will-change: auto;
 }
 
 .marquee-item {
@@ -751,23 +757,16 @@
   backface-visibility: hidden;
 }
 
-/* Defer paint + layout for all off-screen sections */
-section {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 800px;
-}
+/* Removed content-visibility:auto + contain-intrinsic-size. The 800px estimate
+   was wrong for most sections, so as below-viewport sections swapped placeholder
+   -> real height the document height shifted, and Lenis interpolation amplified it
+   into scrollbar jitter. React lazy-mount (page.tsx) + useInView fades already
+   defer off-screen work; this also de-risks render-skipping the Earth WebGL canvas. */
 
-/* Hero always visible — no deferral */
-#hero {
-  content-visibility: visible;
-  contain-intrinsic-size: unset;
-}
-
-/* Work cards: GPU-promoted, no layout thrash */
+/* Work cards: promoted just-in-time on hover (see WorkSection onMouseEnter/Leave).
+   No standing will-change/translateZ — only the card being tilted gets a layer. */
 .work-card-inner {
-  will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
 /* Marquee: keep on compositor */
@@ -776,14 +775,10 @@ section {
   backface-visibility: hidden;
 }
 
-/* Framer Motion elements — hint browser early */
-[data-framer-component-type],
-[style*='translateY'],
-[style*='translateX'],
-[style*='scale'],
-[style*='rotate'] {
-  backface-visibility: hidden;
-}
+/* Removed: [style*='translateY'|'translateX'|'scale'|'rotate'] attribute-substring
+   selectors. They were re-evaluated against every element's inline style on every
+   style recalc (framer-motion writes inline transforms everywhere) and only declared
+   backface-visibility, which does not promote — pure cost, zero benefit. */
 
 /* Lenis smooth scroll target */
 html.lenis {
@@ -804,15 +799,67 @@ html.lenis {
   }
 }
 
-/* Passive scroll hint for browsers */
-* {
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Prevent sub-pixel jitter on transforms */
+/* Crisp text rendering — no translateZ promotion (was forcing a standing GPU
+   layer on every heading/mono node across the page) */
 .font-display,
 .font-mono {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transform: translateZ(0);
+}
+
+/* ===================================
+   REDUCED MOTION — respect system preference
+   =================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .marquee-content {
+    animation-duration: 120s !important;
+    animation-iteration-count: infinite !important;
+  }
+  .aurora-orb {
+    animation: none !important;
+  }
+}
+
+/* ===================================
+   ANIMATION PERFORMANCE — GPU hints
+   =================================== */
+
+/* Framer Motion animated containers */
+section > div,
+.hero-content,
+.blog-cinematic-grid {
+  contain: layout style;
+}
+
+/* Blog grid — isolate paint */
+.blog-cinematic-grid {
+  isolation: isolate;
+}
+
+/* Load more button */
+.blog-load-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-accent);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  background: none;
+  border: none;
+  cursor: none;
+  padding: 0.75rem 0;
+  transition: color 0.3s ease;
+}
+.blog-load-more:hover {
+  color: rgba(255,255,255,0.7);
 }

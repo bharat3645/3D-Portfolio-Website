@@ -54,7 +54,7 @@ export function DecodeText({ text, className = "", delay = 0.5 }: DecodeTextProp
     }, [text, delay]);
 
     return (
-        <motion.h1
+        <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -62,8 +62,12 @@ export function DecodeText({ text, className = "", delay = 0.5 }: DecodeTextProp
                 ease: [0.16, 1, 0.3, 1],
             }}
             className={className}
+            // Decorative brand wordmark — NOT the document <h1>. The real <h1>
+            // (the person's name) lives in HeroSection for name-search ranking.
+            role="img"
+            aria-label={text}
         >
-            {displayText}
-        </motion.h1>
+            <span aria-hidden="true">{displayText}</span>
+        </motion.div>
     );
 }

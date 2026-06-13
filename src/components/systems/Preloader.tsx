@@ -20,23 +20,21 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     const [bootStep, setBootStep] = useState(0);
 
     useEffect(() => {
-        // Simulate loading time 2.5s
-        const totalTime = 2500;
-        const intervalTime = 30;
-        const stepsInterval = totalTime / steps.length;
+        // 1.4s total: ~1.0s fill + 0.4s hold at 100%
+        const intervalTime = 20;
+        const increment = 100 / (1000 / intervalTime); // reach 100 in ~1s
+        const stepsInterval = 1000 / steps.length;
 
         let current = 0;
         const timer = setInterval(() => {
-            current += 1.5; // randomized increment
+            current = Math.min(current + increment, 100);
             if (current >= 100) {
-                current = 100;
                 clearInterval(timer);
-                setTimeout(onComplete, 800); // Slight delay at 100%
+                setTimeout(onComplete, 400);
             }
             setProgress(current);
         }, intervalTime);
 
-        // Step progression
         const stepTimer = setInterval(() => {
             setBootStep(prev => (prev < steps.length - 1 ? prev + 1 : prev));
         }, stepsInterval);
@@ -50,8 +48,8 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     return (
         <motion.div
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -50, filter: 'blur(20px)' }} // Cinematic exit
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, y: -32 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-[9999] bg-bg-void flex flex-col justify-between p-12 pointer-events-none"
         >
             {/* Center: Progress & Label */}
@@ -63,9 +61,14 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
                     />
                 </div>
 
-                <h1 className="font-display text-4xl md:text-6xl font-bold text-text-primary tracking-tighter tabular-nums mb-2">
+                {/* Decorative loading counter — NOT an <h1> (the page's real <h1>
+                    is the name, in HeroSection). Avoids a duplicate/empty heading. */}
+                <div
+                    className="font-display text-4xl md:text-6xl font-bold text-text-primary tracking-tighter tabular-nums mb-2"
+                    aria-hidden="true"
+                >
                     {Math.round(progress)}%
-                </h1>
+                </div>
 
                 <div className="h-6 overflow-hidden">
                     <motion.p
@@ -79,16 +82,15 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
                 </div>
             </div>
 
-            {/* Bottom: Technical Footer */}
+            {/* Bottom: Identity Footer */}
             <div className="flex justify-between items-end">
                 <div className="font-mono text-[10px] text-text-muted/50">
-                    MEM: 64TB OK<br />
-                    GPU: DETECTED<br />
-                    NET: SECURE
+                    Bharat Singh Parihar<br />
+                    AI Systems Engineer
                 </div>
                 <div className="font-mono text-[10px] text-text-muted/50 text-right">
-                    404GHOST<br />
-                    SYS.VER.2.0.4
+                    GenAI · Distributed Systems<br />
+                    Full-Stack Engineering
                 </div>
             </div>
 

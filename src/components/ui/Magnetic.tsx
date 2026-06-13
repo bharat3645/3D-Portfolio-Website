@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 interface MagneticProps {
     children: React.ReactElement;
@@ -10,39 +10,45 @@ interface MagneticProps {
 
 export function Magnetic({ children, strength = 0.35, className = '' }: MagneticProps) {
     const ref = useRef<HTMLDivElement>(null);
-    const [offset, setOffset] = useState({ x: 0, y: 0 });
-    const [active, setActive] = useState(false);
+    const rect = useRef<DOMRect | null>(null);
+    const rafRef = useRef<number>(0);
 
-    const onMove = (e: React.MouseEvent) => {
+    // Cache the rect once on enter — avoids a forced layout read on every mousemove.
+    const onEnter = () => {
         if (!ref.current) return;
-        const { left, top, width, height } = ref.current.getBoundingClientRect();
-        const cx = left + width / 2;
-        const cy = top + height / 2;
-        setOffset({
-            x: (e.clientX - cx) * strength,
-            y: (e.clientY - cy) * strength,
+        rect.current = ref.current.getBoundingClientRect();
+        ref.current.style.transition = 'transform 0.1s ease-out';
+    };
+
+    // Write transform directly, coalesced into one rAF — no React state, no re-render.
+    const onMove = (e: React.MouseEvent) => {
+        const r = rect.current;
+        if (!r) return;
+        const { clientX, clientY } = e;
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = requestAnimationFrame(() => {
+            if (!ref.current) return;
+            const x = (clientX - (r.left + r.width / 2)) * strength;
+            const y = (clientY - (r.top + r.height / 2)) * strength;
+            ref.current.style.transform = `translate(${x}px, ${y}px)`;
         });
-        setActive(true);
     };
 
     const onLeave = () => {
-        setOffset({ x: 0, y: 0 });
-        setActive(false);
+        cancelAnimationFrame(rafRef.current);
+        if (!ref.current) return;
+        ref.current.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+        ref.current.style.transform = 'translate(0px, 0px)';
     };
 
     return (
         <div
             ref={ref}
+            onMouseEnter={onEnter}
             onMouseMove={onMove}
             onMouseLeave={onLeave}
             className={className}
-            style={{
-                transform: `translate(${offset.x}px, ${offset.y}px)`,
-                transition: active
-                    ? 'transform 0.1s ease-out'
-                    : 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
-                display: 'inline-block',
-            }}
+            style={{ transform: 'translate(0px, 0px)', display: 'inline-block' }}
             data-magnetic
         >
             {children}

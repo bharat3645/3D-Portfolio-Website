@@ -30,14 +30,12 @@ export const fadeIn = (direction: string, type: any, delay: number, duration: nu
             y: direction === "up" ? 50 : direction === "down" ? -50 : 0,
             opacity: 0,
             scale: 0.95,
-            filter: "blur(4px)",
         },
         show: {
             x: 0,
             y: 0,
             opacity: 1,
             scale: 1,
-            filter: "blur(0px)",
             transition: {
                 type: type,
                 delay: delay,
@@ -53,12 +51,10 @@ export const zoomIn = (delay: number, duration: number) => {
         hidden: {
             scale: 0.8,
             opacity: 0,
-            filter: "blur(8px)",
         },
         show: {
             scale: 1,
             opacity: 1,
-            filter: "blur(0px)",
             transition: {
                 type: "spring",
                 delay: delay,
