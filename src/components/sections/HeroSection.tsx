@@ -71,11 +71,11 @@ export function HeroSection() {
                 aria-hidden="true"
             />
 
-            {/* ─── SPLINE — right-side robot, vertically centered ─── */}
+            {/* ─── SPLINE — right-side robot, bigger + pushed further right ─── */}
             <div
-                className="absolute right-[-12%] sm:right-[-4%] md:right-[2%] top-1/2 -translate-y-1/2 h-[70%] sm:h-[78%] w-[88%] sm:w-[60%] md:w-[50%] z-[1] mix-blend-screen pointer-events-none"
+                className="absolute right-[-20%] sm:right-[-12%] md:right-[-8%] top-1/2 -translate-y-1/2 h-[80%] sm:h-[90%] w-[100%] sm:w-[70%] md:w-[60%] z-[1] mix-blend-screen pointer-events-none"
                 style={{
-                    opacity: splineReady ? 0.72 : 0,
+                    opacity: splineReady ? 0.8 : 0,
                     transition: 'opacity 1.6s cubic-bezier(0.16,1,0.3,1)',
                 }}
                 aria-hidden="true"
@@ -165,7 +165,7 @@ export function HeroSection() {
                     <DecodeText
                         text="404GHOST"
                         delay={0.25}
-                        className="font-display font-black text-[clamp(3rem,13vw,15rem)] leading-[0.82] tracking-[-0.035em] text-white select-none whitespace-nowrap"
+                        className="font-display font-black text-[clamp(2.4rem,10.5vw,12.5rem)] leading-[0.82] tracking-[-0.035em] text-white select-none whitespace-nowrap"
                     />
 
                     {/* Role line + animated rule — gives the wordmark immediate context */}
