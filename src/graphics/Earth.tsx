@@ -28,7 +28,7 @@ export const EarthCanvas = () => {
     return (
         <Canvas
             shadows={false}
-            frameloop="demand"
+            frameloop="always"
             dpr={dpr}
             gl={{ powerPreference: "high-performance", antialias: false, stencil: false, depth: true }}
             camera={{

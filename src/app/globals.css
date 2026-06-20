@@ -588,10 +588,11 @@ section {
   transform: translateY(0);
 }
 
-/* Smooth spacing between sections */
+/* Smooth spacing between sections — tightened so the journey reads dense and
+   intentional instead of leaving big empty voids between reveals. */
 section+section {
   margin-top: 0;
-  padding-top: clamp(4rem, 8vh, 8rem);
+  padding-top: clamp(2rem, 4.5vh, 4.5rem);
 }
 
 /* ===================================

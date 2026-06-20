@@ -94,16 +94,17 @@ export function MotionProvider({ children }: MotionProviderProps) {
     });
 
     useEffect(() => {
-        // SCROLL SETUP
+        // SCROLL SETUP — snappy + smooth. lerp-based (no long `duration` coast),
+        // so the viewport tracks the wheel/finger instead of gliding after input
+        // stops. This is what kills the "laggy/heavy" perception.
         const lenis = new Lenis({
-            duration: 1.4,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            lerp: 0.1,            // responsive catch-up; higher = snappier
             orientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 0.9,
-            touchMultiplier: 1.8,
+            wheelMultiplier: 1.0, // 1:1 with native wheel distance
+            touchMultiplier: 1.5,
             infinite: false,
-            syncTouch: true,
+            syncTouch: false,     // native touch on mobile — no smoothing jank
         });
         lenisRef.current = lenis;
 

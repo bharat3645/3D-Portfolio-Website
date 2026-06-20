@@ -26,27 +26,15 @@ export const SectionWrapper = (Component: React.ComponentType, idName: string) =
                     &nbsp;
                 </span>
 
-                {/* Compositor-only reveal — opacity + transform + scale (no blur, no paint thrash) */}
+                {/* Crisp compositor-only reveal — fade + rise, no scale wobble.
+                    Faster + snappier than the old 1.2s scale so the page reads
+                    responsive, not heavy. */}
                 <motion.div
-                    initial={{
-                        opacity: 0,
-                        y: 50,
-                        scale: 0.95
-                    }}
-                    whileInView={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1
-                    }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{
-                        duration: 1,
-                        ease: [0.16, 1, 0.3, 1], // Professional easing curve
-                        opacity: { duration: 0.8 },
-                        y: { duration: 1, ease: [0.22, 1, 0.36, 1] },
-                        scale: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
-                    }}
-                    className="py-8 sm:py-10 md:py-12 lg:py-16"
+                    initial={{ opacity: 0, y: 36 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                    className="py-6 sm:py-8 md:py-10"
                 >
                     <Component />
                 </motion.div>

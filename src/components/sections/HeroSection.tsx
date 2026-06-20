@@ -125,7 +125,7 @@ export function HeroSection() {
                 data-cursor="hover"
             >
                 <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/12 bg-white/5 flex-shrink-0">
-                    <Image src="/logo.jpg" alt="Bharat Singh Parihar — 404ghost logo" fill className="object-cover" priority />
+                    <Image src="/logo.jpg" alt="Bharat Singh Parihar — 404ghost logo" fill sizes="32px" className="object-cover" priority />
                 </div>
                 <div className="hidden sm:flex flex-col gap-[1px]">
                     <span className="font-mono text-[8px] tracking-[0.35em] uppercase text-white/50">Bharat Singh Parihar</span>

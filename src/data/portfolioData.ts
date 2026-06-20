@@ -1,7 +1,7 @@
 /**
  * Portfolio Data - Extracted from Resume, GitHub, and LinkedIn
  * Sources:
- * - Resume: Resume_Minimal.pdf
+ * - Resume: BSP-AI_ML_Resume.pdf + BSP-FullStack_Resume.pdf
  * - GitHub: https://github.com/bharat3645
  * - LinkedIn: https://www.linkedin.com/in/bharat-singh-parihar/
  */
@@ -578,7 +578,11 @@ Edge devices (Raspberry Pi/Jetson Nano) process video feeds locally to count veh
         email: "bharat3645@gmail.com",
         github: "https://github.com/bharat3645",
         linkedin: "https://www.linkedin.com/in/bharat-singh-parihar/",
-        resumePDF: "/Resume_Minimal.pdf"
+        resumePDF: "/BSP-AI_ML_Resume.pdf",
+        resumes: [
+            { label: "AI / ML",    href: "/BSP-AI_ML_Resume.pdf" },
+            { label: "Full-Stack", href: "/BSP-FullStack_Resume.pdf" },
+        ]
     }
 };
 

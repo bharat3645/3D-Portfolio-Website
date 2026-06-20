@@ -10,6 +10,7 @@ import { Vignette } from '@/components/graphics/Vignette';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CustomCursor } from '@/components/systems/CustomCursor';
 import { DotNav } from '@/components/systems/DotNav';
+import { ScrollProgress } from '@/components/systems/ScrollProgress';
 import { homeOnlyJsonLd } from '@/app/metadata';
 
 // Lazy-loaded sections
@@ -53,6 +54,7 @@ export default function Home() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(homeOnlyJsonLd) }}
             />
             <CustomCursor />
+            {!isLoading && <ScrollProgress />}
             {!isLoading && <DotNav />}
 
             <main className="relative min-h-screen w-full overflow-x-hidden bg-bg-void selection:bg-accent-primary selection:text-bg-void">

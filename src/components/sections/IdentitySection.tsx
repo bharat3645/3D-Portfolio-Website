@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function IdentitySection() {
     return (
-        <section className="min-h-[80vh] py-24 px-6 md:px-12 relative flex items-center">
+        <section className="py-16 md:py-20 px-6 md:px-12 relative flex items-center">
 
             <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
 
@@ -66,6 +66,7 @@ export function IdentitySection() {
                                 src="/Photo.jpeg"
                                 alt="Bharat Singh Parihar"
                                 fill
+                                sizes="(max-width: 768px) 100vw, 28rem"
                                 className="object-cover grayscale contrast-[1.1] brightness-[0.9] group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100 transition-all duration-1000 ease-out"
                             />
                         </div>
