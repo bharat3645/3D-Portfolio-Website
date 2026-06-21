@@ -171,22 +171,41 @@ function ProjectCard({
                             ? 'bg-[#0A0A0A]/60 border-[#E61E32]/20'
                             : 'bg-[#080808]/80'}
                     `}>
-                        {/* Full-bleed image */}
+                        {/* Full-bleed image — Ken-Burns surge on hover. The image
+                            scales/brightens; the gradient stays put so text stays legible. */}
                         {project.image && (
-                            <div
-                                className="absolute inset-0 transition-opacity duration-700"
-                                style={{ opacity: hovered ? 0.12 : 0.04 }}
-                            >
-                                <Image
-                                    src={project.image}
-                                    alt={project.title}
-                                    fill
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
-                                    className="object-cover"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/80 to-transparent" />
+                            <div className="absolute inset-0 overflow-hidden">
+                                <div
+                                    className="absolute inset-0"
+                                    style={{
+                                        opacity: hovered ? 0.34 : 0.05,
+                                        transform: hovered ? 'scale(1.08)' : 'scale(1)',
+                                        transition: 'opacity 1.1s ease-out, transform 1.1s ease-out',
+                                    }}
+                                >
+                                    <Image
+                                        src={project.image}
+                                        alt={project.title}
+                                        fill
+                                        sizes="(max-width: 1024px) 100vw, 50vw"
+                                        className="object-cover"
+                                    />
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/85 to-[#080808]/40" />
                             </div>
                         )}
+
+                        {/* Ghost index numeral — depth layer behind content */}
+                        <span
+                            aria-hidden="true"
+                            className="absolute top-2 right-4 font-display font-black leading-none select-none pointer-events-none z-0 transition-colors duration-500"
+                            style={{
+                                fontSize: '8rem',
+                                color: hovered ? 'rgba(230,30,50,0.05)' : 'rgba(255,255,255,0.022)',
+                            }}
+                        >
+                            {String(index + 1).padStart(2, '0')}
+                        </span>
 
                         {/* RAF-controlled shine */}
                         <div ref={shineRef} className="absolute inset-0 pointer-events-none z-0" />
