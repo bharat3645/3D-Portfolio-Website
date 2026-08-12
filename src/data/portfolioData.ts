@@ -227,8 +227,7 @@ The system achieved 91% accuracy in detecting fraudulent transactions, comparabl
                 "Trustless escrow system",
                 "Transparent dispute resolution"
             ],
-            github: "https://github.com/bharat3645",
-            demo: "https://gigx-demo.vercel.app",
+            github: "https://github.com/bharat3645/AppXcess-GigX",
             featured: true,
             image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2000&auto=format&fit=crop",
             longDescription: `
@@ -364,6 +363,119 @@ Urban congestion is a major issue. This project utilizes existing CCTV infrastru
 
 ## System Design
 Edge devices (Raspberry Pi/Jetson Nano) process video feeds locally to count vehicles. This data is sent via MQTT to a central server which calculates optimal green light durations using a weighted algorithm.
+            `
+        },
+        {
+            id: "velmora",
+            title: "Velmora",
+            tagline: "Cross-chain NFT gaming platform with real-time multiplayer battles",
+            period: "Aug 2026",
+            problem: "Most NFT games either bolt gameplay onto static JPEGs with no real interaction, or run real-time state entirely off-chain with no verifiable ownership behind it.",
+            solution: "Built a five-subsystem monorepo where NFT minting and ownership live entirely on-chain while movement, trading, and combat are relayed through a server-authoritative real-time backend that validates every action.",
+            architecture: [
+                "Next.js 14 + Phaser 3 + Three.js game client with Privy wallet auth",
+                "Node.js/Express/Socket.IO server-authoritative relay for player position, combat, and room state",
+                "Hono on Cloudflare Workers backend for player profiles and XP, gated behind wallet-signature auth",
+                "Solidity 0.8.24 contracts (Hardhat, OpenZeppelin): VelmoraCoin ERC-20 economy, an ERC-721 NFT collection with a Polygon mirror, and non-transferable soulbound achievement tokens",
+                "Custom generative art engine producing the 1,200-piece layered NFT collection"
+            ],
+            techStack: ["Next.js", "Phaser 3", "Three.js", "Socket.IO", "Solidity", "Hardhat", "OpenZeppelin", "Cloudflare Workers", "MongoDB"],
+            impact: [
+                "Server-validated movement and combat, clamped and sanitized so a malicious client can't teleport or god-mode",
+                "EIP-191 signature auth required on every mutating backend request",
+                "Soulbound achievement tokens enforced as non-transferable at the contract level"
+            ],
+            github: "https://github.com/bharat3645/Velmora",
+            featured: true,
+            image: "https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+Velmora is a cross-chain NFT gaming platform: players connect a wallet, mint a hand of generative NFTs, and take them into a real-time 2D multiplayer world to trade, battle, and earn soulbound achievement tokens.
+
+## Architecture
+The game is split into five independently deployable subsystems: a Next.js/Phaser/Three.js game client, a Socket.IO game server, a Cloudflare Workers backend for persistent progress, a Solidity contract suite, and a generative art engine for the NFT collection.
+
+### Key Design Decisions
+- **On-chain truth for ownership:** Minting and ownership are entirely on-chain — the client talks to the deployed contracts directly, no off-chain database of record.
+- **Server-authoritative real-time state:** Movement and combat are relayed live through Socket.IO, with positions and health server-validated so clients can't cheat.
+- **Wallet-signed persistence:** Every mutating request to the profile/XP backend requires an EIP-191 signature proving control of the wallet being modified.
+
+## What's Next
+The roadmap includes AI-driven NPCs for dynamic trade/battle negotiation, Chainlink VRF to replace the current pseudo-random mint draw, and trustless cross-chain bridging via LayerZero.
+            `
+        },
+        {
+            id: "firesat-ai",
+            title: "FireSat-AI: Wildfire Risk Forecasting",
+            tagline: "CNN-LSTM + attention model forecasting wildfire risk from satellite imagery",
+            period: "Aug 2026",
+            problem: "Wildfire risk models are frequently opaque and rarely disclose where they actually fail, making it hard to trust them for real decisions.",
+            solution: "Built an end-to-end pipeline fusing Sentinel-1/2, Landsat, and MODIS satellite imagery with ERA5 reanalysis weather through a CNN + attention encoder feeding a BiLSTM, producing interpretable 1/3/6-month wildfire risk classifications for two fire-active Alaska regions.",
+            architecture: [
+                "ResNet-style CNN encoder with squeeze-excite channel attention over monthly satellite feature stacks (NDVI, NBR, SAR, fuel moisture)",
+                "Bidirectional LSTM over a 24-month lookback, fused with ERA5 weather features",
+                "Additive temporal attention feeding three multi-horizon classification heads (No Risk / Moderate / High)",
+                "FastAPI backend + Leaflet dashboard exposing risk, attention, and historical trend data",
+                "Real acquisition clients for Earth Engine, ERA5, NASA FIRMS, and Alaska Fire Service, plus a physically-motivated synthetic generator for offline development"
+            ],
+            techStack: ["PyTorch", "FastAPI", "CNN", "BiLSTM", "Attention", "Docker", "GitHub Actions"],
+            impact: [
+                "49/49 tests passing across feature indices, model, dataset, training, and API layers",
+                "Gradient x input saliency and attention visualizations for model interpretability",
+                "Evaluation report honestly discloses where the model does and doesn't beat a majority-class baseline"
+            ],
+            github: "https://github.com/bharat3645/firesat-ai",
+            featured: true,
+            image: "https://images.unsplash.com/photo-1601582589907-f92af5ed9db8?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+FireSat-AI is a GSoC-style MVP for the "Alaska Wildfire Prediction Using Satellite Imagery" proposal: a hybrid CNN-LSTM + attention model that fuses multi-source satellite imagery with weather reanalysis data to forecast wildfire risk at 1, 3, and 6 month horizons.
+
+## Architecture
+Monthly satellite feature stacks pass through a ResNet-style CNN with squeeze-excite channel attention, producing a spatial embedding per month. These are concatenated with ERA5 weather features and fed through a bidirectional LSTM over a 24-month lookback, with additive temporal attention producing the final context vector for three multi-horizon classification heads.
+
+### Interpretability by Design
+Both the channel attention and temporal attention are surfaced directly in the API and dashboard, alongside gradient x input saliency maps, so a predicted risk level always comes with an explanation of which regions and months drove it.
+
+## Honesty Notes
+The shipped demo ships with a physically-motivated synthetic dataset (real Alaska climate normals, seasonal vegetation cycles) rather than live satellite pulls, and the evaluation report plainly states where the demo checkpoint does and doesn't beat a naive majority-class baseline — reported rather than hidden.
+            `
+        },
+        {
+            id: "infranest-platform",
+            title: "InfraNest: AI Backend-Generation Platform",
+            tagline: "Natural language to a production-ready Django, Go Fiber, or Rails backend",
+            period: "Aug 2026",
+            problem: "Bootstrapping a new backend service means rewriting the same models, CRUD endpoints, auth wiring, and Docker config over and over, in whichever framework a team happens to use.",
+            solution: "Built a platform that turns a plain-English description, or a hand-edited DSL spec, into a real, runnable backend project across three frameworks — verified by CI that builds the generated code with each framework's own toolchain.",
+            architecture: [
+                "React + Vite + TypeScript frontend with a visual DSL builder",
+                "Flask code-generation engine: an agentic parser (GPT-4o/Claude, with a deterministic offline fallback) turns prompts into a validated DSL spec",
+                "Three framework generators (Django + DRF, Go Fiber + GORM, Ruby on Rails) rendering Jinja2 templates and structured source",
+                "Copilot CLI for describing, previewing, and generating backends from the terminal",
+                "CI generator-smoke job that builds each generated project with its real toolchain (manage.py check, go build && go vet, ruby -c)"
+            ],
+            techStack: ["React", "TypeScript", "Flask", "Jinja2", "Python", "GPT-4o", "Claude", "Docker"],
+            impact: [
+                "74 backend pytest tests at 94% line coverage, plus 18 frontend Vitest tests",
+                "CI verifies generated Django/Go/Rails projects actually compile with their real toolchains, not just that files are produced",
+                "Works with zero API keys via a deterministic fallback parser when no LLM key is configured"
+            ],
+            github: "https://github.com/bharat3645/Backend-Builder",
+            featured: true,
+            image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2000&auto=format&fit=crop",
+            longDescription: `
+## Overview
+InfraNest collapses backend bootstrapping into one step: describe the system once, in English or in a small declarative DSL, and get a real, runnable project back for the framework you actually need — Django + DRF, Go Fiber + GORM, or Ruby on Rails.
+
+## Pipeline
+A prompt goes through an agentic parser to become a DSL spec; the spec is validated, then handed to one of three generator classes, which render Jinja2 templates (Django) or structured source (Go/Rails) into a project directory, zipped and returned to the client.
+
+### Trust, Not Just Output
+Generating files is easy; generating files that actually build is the hard part. CI doesn't just check that the generator ran — it builds every generated project with that ecosystem's real toolchain (\`manage.py check\`, \`go build && go vet\`, \`ruby -c\`) on every push, backed by 74 backend tests at 94% coverage and 18 frontend tests.
+
+## Degrading Gracefully
+When no OpenAI or Anthropic key is configured, prompt parsing falls back to a deterministic keyword-based parser instead of failing closed, so the platform works end-to-end with zero external dependencies.
             `
         }
     ],
