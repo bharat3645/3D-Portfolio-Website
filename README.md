@@ -15,7 +15,6 @@ A cinematic, interactive, and AI-powered 3D portfolio website built with Next.js
 - **Dark Matte Aesthetic:** A strict "Black, White, Crimson" palette creating a premium, studio-grade visual experience.
 - **3D Interactive Showcase:** Immersive 3D model centerpiece using Three.js with drag, rotate, and zoom capabilities.
 - **Dynamic Project Flashcards:** Interactive, physics-based project cards with detailed metadata and GitHub integrations.
-- **AI Portfolio Tailor:** Generative AI tool (powered by Genkit/Google AI) that customizes portfolio summaries based on job descriptions.
 - **Cinematic Motion:** Powered by Framer Motion for smooth, direction-aware entry animations and micro-interactions.
 - **Responsive & Accessible:** Fully responsive layout with semantic HTML and accessibility best practices.
 - **Downloadable Resumes:** dedicated dropdown for accessing specific resume versions (Web, Data Science, etc.).
@@ -25,7 +24,7 @@ A cinematic, interactive, and AI-powered 3D portfolio website built with Next.js
 ## 🗂️ Project Structure
 
 ```
-My-portfolio/
+3D-Portfolio-Website/
 ├── public/                 # Static assets (images, 3D models, PDF resumes)
 │   ├── models/             # GLB/GLTF model files
 │   └── ...

@@ -1,0 +1,64 @@
+name: CI
+
+# Keeps both halves of the monorepo honest on every change: the contract
+# must still compile and pass its test suite, and the frontend must still
+# produce a production build. Catches regressions (a broken require, a
+# reintroduced hardcoded address, a build that OOMs) before merge instead
+# of after a manual `npm install` on someone's machine.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  contracts:
+    name: Smart contract (compile + test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web3
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: web3/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Run contract test suite
+        run: npx hardhat test
+
+  client:
+    name: Frontend (build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          # Placeholder values so the build doesn't depend on real secrets --
+          # this job only proves the bundle compiles and stays under the
+          # heap limit, it never talks to a live chain or wallet.
+          VITE_TEMPLATE_CLIENT_ID: ci-placeholder
+          VITE_CONTRACT_ADDRESS: "0x0000000000000000000000000000000000dEaD"
