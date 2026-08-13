@@ -1,6 +1,6 @@
 # 404ghost
 
-A cinematic, interactive, and AI-powered 3D portfolio website built with Next.js, React, and Three.js. This project is defined by a "Dark Matte" aesthetic—minimalist, premium, and system-oriented.
+A cinematic, interactive 3D portfolio website built with Next.js, React, and Three.js. This project is defined by a "Dark Matte" aesthetic—minimalist, premium, and system-oriented.
 
 ---
 
@@ -31,7 +31,6 @@ A cinematic, interactive, and AI-powered 3D portfolio website built with Next.js
 ├── src/
 │   ├── app/                # Next.js App Router entry points
 │   ├── components/         # React components (UI, 3D scenes, sections)
-│   ├── ai/                 # AI logic and Genkit flows
 │   ├── hooks/              # Custom React hooks
 │   └── lib/                # Utilities and helpers
 ├── docs/                   # Documentation and design blueprints
@@ -46,7 +45,6 @@ A cinematic, interactive, and AI-powered 3D portfolio website built with Next.js
 - **Framework:** Next.js (App Router)
 - **Styling:** Tailwind CSS, Radix UI, Framer Motion
 - **3D Graphics:** Three.js (@react-three/fiber, @react-three/drei)
-- **AI Integration:** Google Genkit
 - **Type Safety:** TypeScript
 - **Forms:** React Hook Form, Zod
 
